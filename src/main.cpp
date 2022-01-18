@@ -1,10 +1,10 @@
 #include <SFML/Graphics.hpp>
-#include "titleScreen.hpp"
-#include "settings.hpp"
-#include "gameplay.hpp"
-#include "pause.hpp"
 #include "global.hpp"
-#include "gameover.hpp"
+#include "TitleScreen.hpp"
+#include "Settings.hpp"
+#include "Gameplay.hpp"
+#include "PauseScreen.hpp"
+#include "GameOver.hpp"
 #include <iostream>
 
 int main()
@@ -23,10 +23,10 @@ int main()
     sf::Font font;
     font.loadFromFile("fonts/BMgermar.TTF");
 
-    current_game_state current_game_state;
+    current_game_state state;
 
     TitleScreen titlescreen;
-    Settings settings(current_game_state);
+    Settings settings(state);
     Gameplay gameplay(font);
     PauseScreen pausescreen;
     GameOver gameover;
@@ -41,37 +41,37 @@ int main()
         window.draw(background);
 
         // Ecran titre
-        if(current_game_state.state == GAME_MENU)
+        if(state.state == GAME_MENU)
         {
-            titlescreen.display_element(window, font, current_game_state, view);
+            titlescreen.display(window, font, state, view);
         }
 
         // Ecran des paramètres
-        else if(current_game_state.state == SETTINGS)
+        else if(state.state == SETTINGS)
         {
-            settings.display_settings(window, font, current_game_state, view);
+            settings.display(window, font, state, view);
         }
 
         // Ecran de jeu
-        else if(current_game_state.state == PLAY)
+        else if(state.state == PLAY)
         {
-            gameplay.game_loop(window, font, current_game_state, pause);
+            gameplay.display(window, font, state, pause);
         }
 
         // Ecran de pause
-        else if(current_game_state.state == PAUSE)
+        else if(state.state == PAUSE)
         {
-            pausescreen.pause_menu(window, font, pause, current_game_state);
+            pausescreen.display(window, font, pause, state);
         }
 
         // Ecran de game over
-        else if(current_game_state.state == GAME_OVER)
+        else if(state.state == GAME_OVER)
         {
-            gameover.gameoverMenu(window, font, current_game_state, view);
+            gameover.display(window, font, state, view);
         }
 
         // Fermer le jeu
-        else if(current_game_state.state == LEAVE)
+        else if(state.state == LEAVE)
         {
             window.close();
         }
@@ -85,48 +85,48 @@ int main()
                 window.close();
             }
 
-            switch(current_game_state.settingsControls)
+            switch(state.settingsControls)
             {
                 case INSTANT_DESCENT:
                     if(event.type == sf::Event::KeyPressed)
                     {
-                        settings.changeControl(INSTANT_DESCENT, event.key.code, current_game_state);
-                        current_game_state.settingsControls = -1;
+                        settings.changeControl(INSTANT_DESCENT, event.key.code, state);
+                        state.settingsControls = -1;
                     }
                     break;
                 case QUICK_DESCENT:
                     if(event.type == sf::Event::KeyPressed)
                     {
-                        settings.changeControl(QUICK_DESCENT, event.key.code, current_game_state);
-                        current_game_state.settingsControls = -1;
+                        settings.changeControl(QUICK_DESCENT, event.key.code, state);
+                        state.settingsControls = -1;
                     }
                     break;
                 case LEFT_ROTATION:
                     if(event.type == sf::Event::KeyPressed)
                     {
-                        settings.changeControl(LEFT_ROTATION, event.key.code, current_game_state);
-                        current_game_state.settingsControls = -1;
+                        settings.changeControl(LEFT_ROTATION, event.key.code, state);
+                        state.settingsControls = -1;
                     }
                     break;
                 case RIGHT_ROTATION:
                     if(event.type == sf::Event::KeyPressed)
                     {
-                        settings.changeControl(RIGHT_ROTATION, event.key.code, current_game_state);
-                        current_game_state.settingsControls = -1;
+                        settings.changeControl(RIGHT_ROTATION, event.key.code, state);
+                        state.settingsControls = -1;
                     }
                     break;
                 case MOVE_LEFT:
                     if(event.type == sf::Event::KeyPressed)
                     {
-                        settings.changeControl(MOVE_LEFT, event.key.code, current_game_state);
-                        current_game_state.settingsControls = -1;
+                        settings.changeControl(MOVE_LEFT, event.key.code, state);
+                        state.settingsControls = -1;
                     }
                     break;
                 case MOVE_RIGHT:
                     if(event.type == sf::Event::KeyPressed)
                     {
-                        settings.changeControl(MOVE_RIGHT, event.key.code, current_game_state);
-                        current_game_state.settingsControls = -1;
+                        settings.changeControl(MOVE_RIGHT, event.key.code, state);
+                        state.settingsControls = -1;
                     }
                     break;
             }

@@ -1,4 +1,4 @@
-#include "pause.hpp"
+#include "PauseScreen.hpp"
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
@@ -9,7 +9,7 @@ PauseScreen::PauseScreen() : escapePressed(false)
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-void PauseScreen::pause_menu(sf::RenderWindow &window, sf::Font font, sf::Text &pause, current_game_state &state)
+void PauseScreen::display(sf::RenderWindow &window, sf::Font font, sf::Text &pause, current_game_state &state)
 {
     // Vérifie si la touche échap est appuyée
     if(this->escapePressed)

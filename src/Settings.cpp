@@ -1,4 +1,4 @@
-#include "settings.hpp"
+#include "Settings.hpp"
 
 Settings::Settings(current_game_state &state)
 {
@@ -76,7 +76,7 @@ void Settings::changeControl(int control_to_change, int keyPressed, current_game
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-void Settings::display_settings(sf::RenderWindow &window, sf::Font &font, current_game_state &state, sf::View &view)
+void Settings::display(sf::RenderWindow &window, sf::Font &font, current_game_state &state, sf::View &view)
 {
     sf::Vector2f mousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window), view);
 

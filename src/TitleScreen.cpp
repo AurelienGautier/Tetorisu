@@ -1,4 +1,4 @@
-#include "titleScreen.hpp"
+#include "TitleScreen.hpp"
 #include <iostream>
 
 TitleScreen::TitleScreen()
@@ -8,7 +8,7 @@ TitleScreen::TitleScreen()
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-void TitleScreen::display_element(sf::RenderWindow &window, sf::Font &font, current_game_state &state, sf::View &view)
+void TitleScreen::display(sf::RenderWindow &window, sf::Font &font, current_game_state &state, sf::View &view)
 {
     sf::Vector2f mousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window), view);
 

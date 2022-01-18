@@ -1,5 +1,5 @@
 #include "global.hpp"
-#include "grid.hpp"
+#include "Grid.hpp"
 #include <iostream>
 #include <random>
 #include <chrono>

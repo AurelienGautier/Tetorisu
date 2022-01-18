@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-#include "grid.hpp"
+#include "Grid.hpp"
 #include "global.hpp"
 
 #define LEVEL_POSITION_X (window.getSize().x/2 - CASE_SIZE*5 - 5*40)
@@ -11,7 +11,7 @@ class Gameplay
 {
     public:
         Gameplay(sf::Font font);
-        void game_loop(sf::RenderWindow &window, sf::Font font, current_game_state &state, sf::Text &pause);
+        void display(sf::RenderWindow &window, sf::Font font, current_game_state &state, sf::Text &pause);
         void manage_rotation(current_game_state &state);
         void manage_left_and_right(current_game_state &state);
         void manage_tetromino_falling(current_game_state &state);

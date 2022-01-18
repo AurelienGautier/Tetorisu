@@ -1,4 +1,4 @@
-#include "gameplay.hpp"
+#include "Gameplay.hpp"
 #include <iostream>
 /*--------------------------------------------------------------------------------------------------------------*/
 
@@ -10,7 +10,7 @@ Gameplay::Gameplay(sf::Font font)
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-void Gameplay::game_loop(sf::RenderWindow &window, sf::Font font, current_game_state &state, sf::Text &pause)
+void Gameplay::display(sf::RenderWindow &window, sf::Font font, current_game_state &state, sf::Text &pause)
 {
     if(!music_launched)
     {

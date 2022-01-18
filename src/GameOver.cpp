@@ -1,4 +1,4 @@
-#include "gameover.hpp"
+#include "GameOver.hpp"
 
 GameOver::GameOver()
 {
@@ -7,7 +7,7 @@ GameOver::GameOver()
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-void GameOver::gameoverMenu(sf::RenderWindow &window, sf::Font &font, current_game_state &state, sf::View &view)
+void GameOver::display(sf::RenderWindow &window, sf::Font &font, current_game_state &state, sf::View &view)
 {
     sf::Vector2f mousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window), view);
 
