@@ -24,12 +24,9 @@ void Gameplay::display(sf::RenderWindow &window, sf::Font font, current_game_sta
         {
             this->escapePressed = false;
         }
-    }
-
-    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+    } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
     {
         state.state = PAUSE;
-
         this->escapePressed = true;
     }
 

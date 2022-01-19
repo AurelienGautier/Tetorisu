@@ -40,40 +40,27 @@ int main()
         background.setPosition(0,0);
         window.draw(background);
 
-        // Ecran titre
-        if(state.state == GAME_MENU)
+        // Différents états du jeu
+        switch(state.state)
         {
-            titlescreen.display(window, font, state, view);
-        }
-
-        // Ecran des paramètres
-        else if(state.state == SETTINGS)
-        {
-            settings.display(window, font, state, view);
-        }
-
-        // Ecran de jeu
-        else if(state.state == PLAY)
-        {
-            gameplay.display(window, font, state, pause);
-        }
-
-        // Ecran de pause
-        else if(state.state == PAUSE)
-        {
-            pausescreen.display(window, font, pause, state);
-        }
-
-        // Ecran de game over
-        else if(state.state == GAME_OVER)
-        {
-            gameover.display(window, font, state, view);
-        }
-
-        // Fermer le jeu
-        else if(state.state == LEAVE)
-        {
-            window.close();
+            case GAME_MENU:
+                titlescreen.display(window, font, state, view);
+                break;
+            case SETTINGS:
+                settings.display(window, font, state, view);
+                break;
+            case PLAY:
+                gameplay.display(window, font, state, pause);
+                break;
+            case PAUSE:
+                pausescreen.display(window, font, pause, state);
+                break;
+            case GAME_OVER:
+                gameover.display(window, font, state, view);
+                break;
+            case LEAVE:
+                window.close();
+                break;
         }
 
         // Gestion des événements
@@ -85,51 +72,33 @@ int main()
                 window.close();
             }
 
-            switch(state.settingsControls)
+            // 
+            if(event.type == sf::Event::KeyPressed)
             {
-                case INSTANT_DESCENT:
-                    if(event.type == sf::Event::KeyPressed)
-                    {
+                switch(state.settingsControls)
+                {
+                    case INSTANT_DESCENT:
                         settings.changeControl(INSTANT_DESCENT, event.key.code, state);
-                        state.settingsControls = -1;
-                    }
-                    break;
-                case QUICK_DESCENT:
-                    if(event.type == sf::Event::KeyPressed)
-                    {
+                        break;
+                    case QUICK_DESCENT:
                         settings.changeControl(QUICK_DESCENT, event.key.code, state);
-                        state.settingsControls = -1;
-                    }
-                    break;
-                case LEFT_ROTATION:
-                    if(event.type == sf::Event::KeyPressed)
-                    {
+                        break;
+                    case LEFT_ROTATION:
                         settings.changeControl(LEFT_ROTATION, event.key.code, state);
-                        state.settingsControls = -1;
-                    }
-                    break;
-                case RIGHT_ROTATION:
-                    if(event.type == sf::Event::KeyPressed)
-                    {
+                        break;
+                    case RIGHT_ROTATION:
                         settings.changeControl(RIGHT_ROTATION, event.key.code, state);
-                        state.settingsControls = -1;
-                    }
-                    break;
-                case MOVE_LEFT:
-                    if(event.type == sf::Event::KeyPressed)
-                    {
+                        break;
+                    case MOVE_LEFT:
                         settings.changeControl(MOVE_LEFT, event.key.code, state);
-                        state.settingsControls = -1;
-                    }
-                    break;
-                case MOVE_RIGHT:
-                    if(event.type == sf::Event::KeyPressed)
-                    {
+                        break;
+                    case MOVE_RIGHT:
                         settings.changeControl(MOVE_RIGHT, event.key.code, state);
-                        state.settingsControls = -1;
-                    }
-                    break;
+                        break;
+                }
+                state.settingsControls = -1;
             }
+            
 
             if(event.type == sf::Event::Resized)
             {
