@@ -3,17 +3,18 @@
 CC = g++
 EXEC = prog
 SRC = $(wildcard src/*.cpp)
-OBJ = $(SRC:.cpp=.o)
+OBJ = $(SRC:src/%.cpp=obj/%.o)
+
 SFML = -lsfml-system -lsfml-window -lsfml-graphics -lsfml-audio
 
 all : $(EXEC)
 
-src/%.o : src/%.cpp
+obj/%.o : src/%.cpp
 	$(CC) -o $@ -c $<
 
 $(EXEC) : $(OBJ)
-	$(CC) -o $(EXEC) $(OBJ) $(SFML)
+	$(CC) -o $@ $^ $(SFML)
 
 clean :
-	rm -f src/*.o
+	rm -f obj/*.o
 	rm prog

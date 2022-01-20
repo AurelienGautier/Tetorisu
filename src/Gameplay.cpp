@@ -147,19 +147,30 @@ void Gameplay::manage_tetromino_falling(current_game_state &state)
 
 void Gameplay::manage_instant_falling(current_game_state &state)
 {
-    if(this->spacePressed)
-    {
-        if(!sf::Keyboard::isKeyPressed(state.controls[INSTANT_DESCENT]))
-        {
-            this->spacePressed = false;
-        }
-    }
+    /*
+        spacePressed == true && touche pas appuyée          -> spacePressed = false
+        spacePressed == true && touche appuyée              -> rien
 
-    else if(sf::Keyboard::isKeyPressed(state.controls[INSTANT_DESCENT]))
+        spacePressed == false && touche pas appuyée         -> rien
+        spacePressed == false && touche appuyée             -> spacePressed = true, effectuer les instructions
+    */
+
+    if(keyPressed(spacePressed, sf::Keyboard::isKeyPressed(state.controls[INSTANT_DESCENT])))
     {
         grid.go_down();
-        this->spacePressed = true;
     }
+
+    // if(this->spacePressed)
+    // {
+    //     if(!sf::Keyboard::isKeyPressed(state.controls[INSTANT_DESCENT]))
+    //     {
+    //         this->spacePressed = false;
+    //     }
+    // } else if(sf::Keyboard::isKeyPressed(state.controls[INSTANT_DESCENT]))
+    // {
+    //     this->spacePressed = true;
+    //     grid.go_down();
+    // }
 }
 
 /*--------------------------------------------------------------------------------------------------------------*/

@@ -72,7 +72,7 @@ int main()
                 window.close();
             }
 
-            // 
+            // Paramétrer les contrôles
             if(event.type == sf::Event::KeyPressed)
             {
                 switch(state.settingsControls)
@@ -107,7 +107,7 @@ int main()
             }
         }
 
-        // Affichache la fenêtre et ses éléments
+        // Affiche la fenêtre et ses éléments
         
         window.setView(view);
         window.display();

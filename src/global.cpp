@@ -1,4 +1,5 @@
 #include "global.hpp"
+#include <iostream>
 
 void displaying_text(sf::RenderWindow &window, std::string text_to_display, sf::Font &font, int size, int position_x, int position_y)
 {
@@ -9,16 +10,33 @@ void displaying_text(sf::RenderWindow &window, std::string text_to_display, sf::
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-void manage_clic(sf::RenderWindow &window, int left_edge, int up_edge, int down_edge, int action, current_game_state &state)
+bool keyPressed(bool &keyPressed, const bool keyPressedSF)
 {
+    std::cout << keyPressed << std::endl;
+    std::cout << std::endl;
+    if(!keyPressed && keyPressedSF)
+    {
+        keyPressed = true;
+    }
     
-}
+    if(keyPressed)
+    {
+        if(!keyPressedSF)
+        {
+            keyPressed = false;
+        }
+    } else if(keyPressedSF)
+    {
+        keyPressed = true;
+    }
 
-/*--------------------------------------------------------------------------------------------------------------*/
+    if(!keyPressed && keyPressedSF)
+    {
+        std::cout << keyPressed << std::endl;
+        return true;
+    }
 
-void keypressed(bool keyPressed)
-{
-    
+    return false;
 }
 
 /*--------------------------------------------------------------------------------------------------------------*/

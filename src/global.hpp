@@ -31,7 +31,7 @@ typedef struct current_game_state current_game_state;
 
 void displaying_text(sf::RenderWindow &window, std::string text_to_display, sf::Font &font, int size, int position_x, int position_y);
 void manage_clic(int left_edge, int up_edge, int down_edge, int action, current_game_state &state);
-void keypressed(bool keyPressed);
+bool keyPressed(bool &keyPressed, const bool keyPressedS);
 
 
 // Affichage pour le gameplay
