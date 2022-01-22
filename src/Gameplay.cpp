@@ -66,33 +66,14 @@ void Gameplay::display(sf::RenderWindow &window, sf::Font font, current_game_sta
 void Gameplay::manage_rotation(current_game_state &state)
 {
     // Rotation gauche
-    if(this->Wpressed)
-    {
-        if(!sf::Keyboard::isKeyPressed(state.controls[LEFT_ROTATION]))
-        {
-            this->Wpressed = false;
-        }
-    }
-
-    else if(sf::Keyboard::isKeyPressed(state.controls[LEFT_ROTATION]))
+    if(keyPressed(this->Wpressed, sf::Keyboard::isKeyPressed(state.controls[LEFT_ROTATION])))
     {
         grid.rotate('L');
-        this->Wpressed = true;
     }
 
-    // Rotation droite
-    if(this->UpPressed)
-    {
-        if(!sf::Keyboard::isKeyPressed(state.controls[RIGHT_ROTATION]))
-        {
-            this->UpPressed = false;
-        }
-    }
-
-    else if(sf::Keyboard::isKeyPressed(state.controls[RIGHT_ROTATION]))
+    if(keyPressed(this->UpPressed, sf::Keyboard::isKeyPressed(state.controls[RIGHT_ROTATION])))
     {
         grid.rotate('R');
-        this->UpPressed = true;
     }
 }
 
@@ -147,30 +128,10 @@ void Gameplay::manage_tetromino_falling(current_game_state &state)
 
 void Gameplay::manage_instant_falling(current_game_state &state)
 {
-    /*
-        spacePressed == true && touche pas appuyée          -> spacePressed = false
-        spacePressed == true && touche appuyée              -> rien
-
-        spacePressed == false && touche pas appuyée         -> rien
-        spacePressed == false && touche appuyée             -> spacePressed = true, effectuer les instructions
-    */
-
     if(keyPressed(spacePressed, sf::Keyboard::isKeyPressed(state.controls[INSTANT_DESCENT])))
     {
         grid.go_down();
     }
-
-    // if(this->spacePressed)
-    // {
-    //     if(!sf::Keyboard::isKeyPressed(state.controls[INSTANT_DESCENT]))
-    //     {
-    //         this->spacePressed = false;
-    //     }
-    // } else if(sf::Keyboard::isKeyPressed(state.controls[INSTANT_DESCENT]))
-    // {
-    //     this->spacePressed = true;
-    //     grid.go_down();
-    // }
 }
 
 /*--------------------------------------------------------------------------------------------------------------*/
@@ -184,9 +145,7 @@ void Gameplay::manage_quick_falling(current_game_state &state)
             this->speed*=4;
             this->DownPressed = false;
         }
-    }
-
-    else if(sf::Keyboard::isKeyPressed(state.controls[QUICK_DESCENT]))
+    } else if(sf::Keyboard::isKeyPressed(state.controls[QUICK_DESCENT]))
     {
         this->speed/=4;
         this->DownPressed = true;

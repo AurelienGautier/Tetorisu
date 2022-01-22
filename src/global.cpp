@@ -10,15 +10,9 @@ void displaying_text(sf::RenderWindow &window, std::string text_to_display, sf::
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
+// Permet d'éviter les appuis maintenus
 bool keyPressed(bool &keyPressed, const bool keyPressedSF)
-{
-    std::cout << keyPressed << std::endl;
-    std::cout << std::endl;
-    if(!keyPressed && keyPressedSF)
-    {
-        keyPressed = true;
-    }
-    
+{   
     if(keyPressed)
     {
         if(!keyPressedSF)
@@ -28,11 +22,6 @@ bool keyPressed(bool &keyPressed, const bool keyPressedSF)
     } else if(keyPressedSF)
     {
         keyPressed = true;
-    }
-
-    if(!keyPressed && keyPressedSF)
-    {
-        std::cout << keyPressed << std::endl;
         return true;
     }
 
