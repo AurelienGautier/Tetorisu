@@ -1,0 +1,449 @@
+make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+# GNU Make 4.3
+# Built for x86_64-pc-linux-gnu
+# Copyright (C) 1988-2020 Free Software Foundation, Inc.
+# License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+# This is free software: you are free to change and redistribute it.
+# There is NO WARRANTY, to the extent permitted by law.
+
+# Make data base, printed on Wed Jan 26 18:47:19 2022
+
+# Variables
+
+# makefile (from 'Makefile', line 6)
+OBJ = $(SRC:src/%.cpp=obj/%.o)
+# environment
+GDK_BACKEND = x11
+# environment
+LC_ALL = C
+# environment
+NO_AT_BRIDGE = 1
+# makefile (from 'Makefile', line 5)
+SRC = $(wildcard src/*.cpp)
+# environment
+GTK_RC_FILES = /etc/gtk/gtkrc:/home/aurelieng/.gtkrc:/home/aurelieng/.config/gtkrc
+# environment
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-bea991c1-0167-4385-a1f7-e02358f14769.sock
+# environment
+LC_NAME = fr_FR.UTF-8
+# environment
+LC_NUMERIC = fr_FR.UTF-8
+# environment
+VSCODE_CWD = /home/aurelieng
+# environment
+LC_ADDRESS = fr_FR.UTF-8
+# default
+MAKE_COMMAND := make
+# environment
+GTK3_MODULES = xapp-gtk3-module
+# automatic
+@D = $(patsubst %/,%,$(dir $@))
+# environment
+VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# default
+.VARIABLES := 
+# environment
+PWD = /home/aurelieng/Tetorisu
+# automatic
+%D = $(patsubst %/,%,$(dir $%))
+# environment
+MAIL = /var/spool/mail/aurelieng
+# automatic
+^D = $(patsubst %/,%,$(dir $^))
+# environment
+VSCODE_LOG_STACK = false
+# automatic
+%F = $(notdir $%)
+# environment
+VSCODE_CODE_CACHE_PATH = /home/aurelieng/.config/Code - OSS/CachedData/b3318bc0524af3d74034b8bb8a64df0ccf35549a
+# environment
+XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session1
+# environment
+LANG = C
+# environment
+XAUTHORITY = /home/aurelieng/.Xauthority
+# default
+.LOADED := 
+# default
+.INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
+# makefile
+MAKEFLAGS = pqrR
+# makefile
+CURDIR := /home/aurelieng/Tetorisu
+# environment
+VSCODE_PIPE_LOGGING = true
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+# automatic
+*D = $(patsubst %/,%,$(dir $*))
+# environment
+PAM_KWALLET5_LOGIN = /run/user/1000/kwallet5.socket
+# environment
+MFLAGS = -pqrR
+# default
+.SHELLFLAGS := -c
+# environment
+QT_LINUX_ACCESSIBILITY_ALWAYS_ON = 1
+# environment
+XDG_CONFIG_DIRS = /home/aurelieng/.config/kdedefaults:/etc/xdg
+# automatic
++D = $(patsubst %/,%,$(dir $+))
+# environment
+XCURSOR_THEME = breeze_cursors
+# environment
+XDG_SESSION_DESKTOP = KDE
+# environment
+VSCODE_CRASH_REPORTER_START_OPTIONS = {"companyName":"Microsoft","productName":"Code - OSS","submitURL":"","uploadToServer":false}
+# makefile (from 'Makefile', line 1)
+MAKEFILE_LIST := Makefile
+# automatic
+@F = $(notdir $@)
+# environment
+VSCODE_VERBOSE_LOGGING = true
+# environment
+VSCODE_PID = 80896
+# environment
+XDG_SESSION_TYPE = x11
+# automatic
+?D = $(patsubst %/,%,$(dir $?))
+# environment
+SESSION_MANAGER = local/aurelien-80wk:@/tmp/.ICE-unix/1040,unix/aurelien-80wk:/tmp/.ICE-unix/1040
+# automatic
+*F = $(notdir $*)
+# makefile (from 'Makefile', line 8)
+SFML = -lsfml-system -lsfml-window -lsfml-graphics -lsfml-audio
+# environment
+CHROME_DESKTOP = code-oss.desktop
+# environment
+DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
+# automatic
+<D = $(patsubst %/,%,$(dir $<))
+# makefile (from 'Makefile', line 4)
+EXEC = prog
+# environment
+VSCODE_NLS_CONFIG = {"locale":"fr","availableLanguages":{},"_languagePackSupport":true}
+# environment
+BREAKPAD_DUMP_LOCATION = /home/aurelieng/.config/Code - OSS/exthost Crash Reports
+# default
+MAKE_HOST := x86_64-pc-linux-gnu
+# makefile
+SHELL = /bin/sh
+# default
+MAKECMDGOALS := all
+# environment
+SHLVL = 0
+# environment
+MAKELEVEL := 0
+# default
+MAKE = $(MAKE_COMMAND)
+# environment
+PATH = /home/aurelieng/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl
+# default
+MAKEFILES := 
+# environment
+LANGUAGE = 
+# environment
+LC_MONETARY = fr_FR.UTF-8
+# environment
+MOTD_SHOWN = pam
+# automatic
+^F = $(notdir $^)
+# environment
+KCRASH_AUTO_RESTARTED = 1
+# environment
+LC_TIME = fr_FR.UTF-8
+# environment
+VSCODE_LOG_NATIVE = false
+# environment
+LC_TELEPHONE = fr_FR.UTF-8
+# automatic
+?F = $(notdir $?)
+# environment
+KDE_APPLICATIONS_AS_SCOPE = 1
+# environment
+XDG_SEAT = seat0
+# environment
+XDG_CURRENT_DESKTOP = KDE
+# automatic
++F = $(notdir $+)
+# environment
+XDG_SEAT_PATH = /org/freedesktop/DisplayManager/Seat0
+# environment
+DESKTOP_SESSION = plasma
+# environment
+ORIGINAL_XDG_CURRENT_DESKTOP = KDE
+# 'override' directive
+GNUMAKEFLAGS := 
+# environment
+QT_SCREEN_SCALE_FACTORS = eDP-1=1.25;HDMI-1=1.25;DP-1=1.25;HDMI-2=1.25;
+# environment
+ 
+LOGNAME = aurelieng
+# environment
+XDG_VTNR = 1
+# makefile
+.DEFAULT_GOAL := all
+# environment
+SYSTEMD_EXEC_PID = 939
+# environment
+DISPLAY = :0
+# environment
+GTK_MODULES = canberra-gtk-module
+# environment
+USER = aurelieng
+# default
+MAKE_VERSION := 4.3
+# environment
+KDE_SESSION_UID = 1000
+# environment
+LC_MEASUREMENT = fr_FR.UTF-8
+# environment
+_ = /usr/bin/make
+# environment
+LC_PAPER = fr_FR.UTF-8
+# environment
+XDG_RUNTIME_DIR = /run/user/1000
+# environment
+D_DISABLE_RT_SCREEN_SCALE = 1
+# environment
+XDG_SESSION_CLASS = user
+# environment
+VSCODE_AMD_ENTRYPOINT = vs/workbench/services/extensions/node/extensionHostProcess
+# environment
+GTK2_RC_FILES = /etc/gtk-2.0/gtkrc:/home/aurelieng/.gtkrc-2.0:/home/aurelieng/.config/gtkrc-2.0
+# environment
+HOME = /home/aurelieng
+# environment
+ELECTRON_RUN_AS_NODE = 1
+# environment
+VSCODE_IPC_HOOK = /run/user/1000/vscode-e6fefb24-1.62.0-main.sock
+# environment
+XDG_SESSION_ID = 2
+# environment
+XCURSOR_SIZE = 24
+# default
+.RECIPEPREFIX := 
+# automatic
+<F = $(notdir $<)
+# default
+SUFFIXES := 
+# environment
+QT_AUTO_SCREEN_SCALE_FACTOR = 0
+# environment
+VSCODE_CLI = 1
+# environment
+ELECTRON_NO_ATTACH_CONSOLE = 1
+# environment
+KDE_SESSION_VERSION = 5
+# default
+.FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell nocomment grouped-target extra-prereqs archives jobserver output-sync check-symlink guile load
+# makefile (from 'Makefile', line 3)
+CXX = g++
+# environment
+KDE_FULL_SESSION = true
+# environment
+LC_IDENTIFICATION = fr_FR.UTF-8
+# variable set hash-table stats:
+# Load=116/1024=11%, Rehash=0, Collisions=13/150=9%
+
+# Pattern-specific Variable Values
+
+# No pattern-specific variable values.
+
+# Directories
+
+# src (device 66308, inode 1059607): 17 files, no impossibilities.
+# . (device 66308, inode 1050159): 12 files, no impossibilities.
+
+# 29 files, no impossibilities in 2 directories.
+
+# Implicit Rules
+
+obj/%.o: src/%.cpp
+#  recipe to execute (from 'Makefile', line 13):
+	$(CXX) -o $@ -c $<
+
+# 1 implicit rules, 0 (0.0%) terminal.
+# Files
+
+prog: obj/GameOver.o obj/Gameplay.o obj/Grid.o obj/PauseScreen.o obj/Settings.o obj/TitleScreen.o obj/global.o obj/main.o
+#  Implicit rule search has not been done.
+#  Last modified 2022-01-22 18:00:40.030037674
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 16):
+	$(CXX) -o $@ $^ $(SFML)
+
+obj/global.o: src/global.cpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'global'
+#  Last modified 2022-01-22 14:11:55.730846056
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 13):
+	$(CXX) -o $@ -c $<
+
+obj/main.o: src/main.cpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'main'
+#  Last modified 2022-01-22 17:57:23.850049142
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 13):
+	$(CXX) -o $@ -c $<
+
+obj/TitleScreen.o: src/TitleScreen.cpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'TitleScreen'
+#  Last modified 2022-01-22 17:57:55.333380635
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 13):
+	$(CXX) -o $@ -c $<
+
+# Not a target:
+src/global.cpp:
+#  Implicit rule search has been done.
+#  Last modified 2022-01-22 12:55:54.637782141
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+src/Grid.cpp:
+#  Implicit rule search has been done.
+#  Last modified 2022-01-18 21:21:46.594202444
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+Makefile:
+#  Implicit rule search has been done.
+#  Last modified 2022-01-20 22:34:19.29126444
+#  File has been updated.
+#  Successfully updated.
+
+obj/Settings.o: src/Settings.cpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'Settings'
+#  Last modified 2022-01-22 18:00:39.86670435
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 13):
+	$(CXX) -o $@ -c $<
+
+# Not a target:
+src/PauseScreen.cpp:
+#  Implicit rule search has been done.
+#  Last modified 2022-01-18 21:22:52.330865255
+#  File has been updated.
+#  Successfully updated.
+
+obj/GameOver.o: src/GameOver.cpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'GameOver'
+#  Last modified 2022-01-22 17:57:23.086715854
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 13):
+	$(CXX) -o $@ -c $<
+
+# Not a target:
+src/GameOver.cpp:
+#  Implicit rule search has been done.
+#  Last modified 2022-01-22 17:57:14.000049718
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+src/main.cpp:
+#  Implicit rule search has been done.
+#  Last modified 2022-01-22 17:48:43.560079555
+#  File has been updated.
+#  Successfully updated.
+
+clean:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 19):
+	rm -f obj/*.o
+	rm prog
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+all: prog
+#  Command line target.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+src/Gameplay.cpp:
+#  Implicit rule search has been done.
+#  Last modified 2022-01-22 17:33:46.140132017
+#  File has been updated.
+#  Successfully updated.
+
+obj/Grid.o: src/Grid.cpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'Grid'
+#  Last modified 2022-01-20 22:45:50.03789046
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 13):
+	$(CXX) -o $@ -c $<
+
+obj/PauseScreen.o: src/PauseScreen.cpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'PauseScreen'
+#  Last modified 2022-01-20 22:45:51.551223704
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 13):
+	$(CXX) -o $@ -c $<
+
+obj/Gameplay.o: src/Gameplay.cpp
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: 'Gameplay'
+#  Last modified 2022-01-22 17:35:18.040126645
+#  File has been updated.
+#  Successfully updated.
+#  recipe to execute (from 'Makefile', line 13):
+	$(CXX) -o $@ -c $<
+
+# Not a target:
+src/TitleScreen.cpp:
+#  Implicit rule search has been done.
+#  Last modified 2022-01-22 17:57:46.940047793
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+src/Settings.cpp:
+#  Implicit rule search has been done.
+#  Last modified 2022-01-22 18:00:36.230037897
+#  File has been updated.
+#  Successfully updated.
+
+# files hash-table stats:
+# Load=22/1024=2%, Rehash=0, Collisions=0/67=0%
+# VPATH Search Paths
+
+# No 'vpath' search paths.
+
+# No general ('VPATH' variable) search path.
+
+# strcache buffers: 1 (0) / strings = 59 / storage = 659 B / avg = 11 B
+# current buf: size = 8162 B / used = 659 B / count = 59 / avg = 11 B
+
+# strcache performance: lookups = 80 / hit rate = 26%
+# hash-table stats:
+# Load=59/8192=1%, Rehash=0, Collisions=0/80=0%
+# Finished Make data base on Wed Jan 26 18:47:19 2022
+
+ 

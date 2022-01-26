@@ -14,22 +14,14 @@ void Gameplay::display(sf::RenderWindow &window, sf::Font font, current_game_sta
 {
     if(!music_launched)
     {
-        music_launched = true;
         this->music.play();
+        music_launched = true;
     }
 
-    if(this->escapePressed)
-    {
-        if(!sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-        {
-            this->escapePressed = false;
-        }
-    } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+    if(keyPressed(this->escapePressed, sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)))
     {
         state.state = PAUSE;
-        this->escapePressed = true;
     }
-
 
     if(this->incrementLevel)
     {
@@ -52,18 +44,18 @@ void Gameplay::display(sf::RenderWindow &window, sf::Font font, current_game_sta
     grid.display_grid(window);
     grid.display_score(window, font);
     grid.display_tetr_to_come(window);
-    this->display_level(window, font);
+    this->displayLevel(window, font);
 
-    this->manage_rotation(state);
-    this->manage_left_and_right(state);
-    this->manage_tetromino_falling(state);
-    this->manage_instant_falling(state);
-    this->manage_quick_falling(state);
+    this->manageRotation(state);
+    this->manageLeftAndRight(state);
+    this->manageTetrominoFalling(state);
+    this->manageInstantFalling(state);
+    this->manageQuickFalling(state);
 }
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-void Gameplay::manage_rotation(current_game_state &state)
+void Gameplay::manageRotation(current_game_state &state)
 {
     // Rotation gauche
     if(keyPressed(this->Wpressed, sf::Keyboard::isKeyPressed(state.controls[LEFT_ROTATION])))
@@ -71,6 +63,7 @@ void Gameplay::manage_rotation(current_game_state &state)
         grid.rotate('L');
     }
 
+    // Rotation droite
     if(keyPressed(this->UpPressed, sf::Keyboard::isKeyPressed(state.controls[RIGHT_ROTATION])))
     {
         grid.rotate('R');
@@ -79,7 +72,7 @@ void Gameplay::manage_rotation(current_game_state &state)
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-void Gameplay::manage_left_and_right(current_game_state &state)
+void Gameplay::manageLeftAndRight(current_game_state &state)
 {
     if(this->move_timer == 0)
     {
@@ -104,7 +97,7 @@ void Gameplay::manage_left_and_right(current_game_state &state)
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-void Gameplay::manage_tetromino_falling(current_game_state &state)
+void Gameplay::manageTetrominoFalling(current_game_state &state)
 {
     if(this->time == 0)
     {
@@ -126,7 +119,7 @@ void Gameplay::manage_tetromino_falling(current_game_state &state)
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-void Gameplay::manage_instant_falling(current_game_state &state)
+void Gameplay::manageInstantFalling(current_game_state &state)
 {
     if(keyPressed(spacePressed, sf::Keyboard::isKeyPressed(state.controls[INSTANT_DESCENT])))
     {
@@ -136,7 +129,7 @@ void Gameplay::manage_instant_falling(current_game_state &state)
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-void Gameplay::manage_quick_falling(current_game_state &state)
+void Gameplay::manageQuickFalling(current_game_state &state)
 {
     if(this->DownPressed)
     {
@@ -154,7 +147,7 @@ void Gameplay::manage_quick_falling(current_game_state &state)
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-void Gameplay::display_level(sf::RenderWindow &window, sf::Font &font)
+void Gameplay::displayLevel(sf::RenderWindow &window, sf::Font &font)
 {
     sf::Text level("LEVEL : "+std::to_string(this->level), font, 50);
     level.setPosition(LEVEL_POSITION_X, LEVEL_POSITION_Y);

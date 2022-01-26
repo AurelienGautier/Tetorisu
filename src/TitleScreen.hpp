@@ -21,8 +21,8 @@ class TitleScreen
 {
     public:
         TitleScreen();
-        void display(sf::RenderWindow &window, sf::Font &font, current_game_state &state, sf::View &view);
-        void titlescreen_manage_clic(sf::Vector2f mousePosition, int left_edge, int right_edge, int up_edge, int down_edge, int action, current_game_state &state);
+        void display(sf::RenderWindow &window, sf::Font &font, current_game_state &state);
+        void titlescreen_manage_clic(sf::Vector2i mousePosition, int left_edge, int right_edge, int up_edge, int down_edge, int action, current_game_state &state);
         
     private:
 };

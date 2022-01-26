@@ -18,8 +18,6 @@ int main()
     sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Tetorisu", sf::Style::None);
     window.setFramerateLimit(60);
 
-    sf::View view(sf::Vector2f(window.getSize().x/2, window.getSize().y/2), sf::Vector2f(1920, 1080));
-
     sf::Font font;
     font.loadFromFile("fonts/BMgermar.TTF");
 
@@ -44,10 +42,10 @@ int main()
         switch(state.state)
         {
             case GAME_MENU:
-                titlescreen.display(window, font, state, view);
+                titlescreen.display(window, font, state);
                 break;
             case SETTINGS:
-                settings.display(window, font, state, view);
+                settings.display(window, font, state);
                 break;
             case PLAY:
                 gameplay.display(window, font, state, pause);
@@ -56,7 +54,7 @@ int main()
                 pausescreen.display(window, font, pause, state);
                 break;
             case GAME_OVER:
-                gameover.display(window, font, state, view);
+                gameover.display(window, font, state);
                 break;
             case LEAVE:
                 window.close();
@@ -98,18 +96,11 @@ int main()
                 }
                 state.settingsControls = -1;
             }
-            
-
-            if(event.type == sf::Event::Resized)
-            {
-                float aspectRatio = float(window.getSize().x) / float(window.getSize().y);
-                view.setSize(1920*aspectRatio, 1080);
-            }
         }
 
         // Affiche la fenêtre et ses éléments
         
-        window.setView(view);
+        // window.set();
         window.display();
     }
     

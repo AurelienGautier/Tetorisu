@@ -8,9 +8,9 @@ TitleScreen::TitleScreen()
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-void TitleScreen::display(sf::RenderWindow &window, sf::Font &font, current_game_state &state, sf::View &view)
+void TitleScreen::display(sf::RenderWindow &window, sf::Font &font, current_game_state &state)
 {
-    sf::Vector2f mousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window), view);
+    sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
 
     displaying_text(window, "TETORISU", font, 80, TITLE_POSITION_X, TITLE_POSITION_Y);
 
@@ -26,7 +26,7 @@ void TitleScreen::display(sf::RenderWindow &window, sf::Font &font, current_game
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-void TitleScreen::titlescreen_manage_clic(sf::Vector2f mousePosition, int left_edge, int right_edge, int up_edge, int down_edge, int action, current_game_state &state)
+void TitleScreen::titlescreen_manage_clic(sf::Vector2i mousePosition, int left_edge, int right_edge, int up_edge, int down_edge, int action, current_game_state &state)
 {
     if(mousePosition.x > left_edge && mousePosition.x < right_edge && mousePosition.y > up_edge && mousePosition.y < down_edge)
     {

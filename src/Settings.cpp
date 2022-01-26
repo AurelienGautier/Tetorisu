@@ -76,9 +76,9 @@ void Settings::changeControl(int control_to_change, int keyPressed, current_game
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-void Settings::display(sf::RenderWindow &window, sf::Font &font, current_game_state &state, sf::View &view)
+void Settings::display(sf::RenderWindow &window, sf::Font &font, current_game_state &state)
 {
-    sf::Vector2f mousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window), view);
+    sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
 
     // Affichage et utilisation du bouton de retour au menu
     displaying_text(window, "BACK", font, 50, BACK_BUTTON_X, BACK_BUTTON_Y);
@@ -124,7 +124,7 @@ void Settings::display(sf::RenderWindow &window, sf::Font &font, current_game_st
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-void Settings::settings_manage_clic(sf::Vector2f mousePosition, int left_edge, int up_edge, int down_edge, int action, current_game_state &state)
+void Settings::settings_manage_clic(sf::Vector2i mousePosition, int left_edge, int up_edge, int down_edge, int action, current_game_state &state)
 {
     if(mousePosition.x > left_edge && mousePosition.y > up_edge && mousePosition.y < down_edge)
     {

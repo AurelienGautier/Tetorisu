@@ -7,9 +7,9 @@ GameOver::GameOver()
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-void GameOver::display(sf::RenderWindow &window, sf::Font &font, current_game_state &state, sf::View &view)
+void GameOver::display(sf::RenderWindow &window, sf::Font &font, current_game_state &state)
 {
-    sf::Vector2f mousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window), view);
+    sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
 
     displaying_text(window, "GAME OVER", font, 80, GAMEOVER_X, GAMEOVER_Y);
     displaying_text(window, "RETRY ?", font, 50, RETRY_X, RETRY_Y);
@@ -23,7 +23,7 @@ void GameOver::display(sf::RenderWindow &window, sf::Font &font, current_game_st
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-void GameOver::gameover_manage_clic(sf::Vector2f mousePosition, int left_edge, int right_edge, int up_edge, int down_edge, int action, current_game_state &state)
+void GameOver::gameover_manage_clic(sf::Vector2i mousePosition, int left_edge, int right_edge, int up_edge, int down_edge, int action, current_game_state &state)
 {
     if(mousePosition.x > left_edge && mousePosition.x < right_edge && mousePosition.y > up_edge && mousePosition.y < down_edge)
     {
