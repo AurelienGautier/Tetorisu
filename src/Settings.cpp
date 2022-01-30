@@ -1,9 +1,23 @@
 #include "Settings.hpp"
+#include <iostream>
 
 Settings::Settings(current_game_state &state)
 {
     this->initKeys();
     this->initControls(state);
+
+    std::ifstream resolutionFile("savedDatas/resolution.txt");
+
+    if(resolutionFile.is_open())
+    {
+        resolutionFile >> state.windowWidth;
+        resolutionFile >> state.windowHeight;
+    } 
+
+    else 
+    {
+        std::cout << "Fichier des paramètres de l'écran inaccessible." << std::endl;
+    }
 }
 
 /*--------------------------------------------------------------------------------------------------------------*/
@@ -133,6 +147,13 @@ void Settings::settings_manage_clic(sf::Vector2i mousePosition, int left_edge, i
             state.settingsControls = action;
         }
     }
+}
+
+/*--------------------------------------------------------------------------------------------------------------*/
+
+void resizeWindow(sf::RenderWindow &window, sf::View view)
+{
+    float aspectRatio = float(window.getSize().x / float(window.getSize().y));
 }
 
 /*--------------------------------------------------------------------------------------------------------------*/

@@ -12,6 +12,12 @@ Gameplay::Gameplay(sf::Font font)
 
 void Gameplay::display(sf::RenderWindow &window, sf::Font font, current_game_state &state, sf::Text &pause)
 {
+    // Met le jeu en pause si la fenêtre n'est pas au premier plan
+    if(!window.hasFocus())        
+    {
+        state.state = PAUSE;
+    }
+
     if(!music_launched)
     {
         this->music.play();

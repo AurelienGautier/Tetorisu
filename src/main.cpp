@@ -5,29 +5,29 @@
 #include "Gameplay.hpp"
 #include "PauseScreen.hpp"
 #include "GameOver.hpp"
-#include <iostream>
 
 int main()
 {
+    current_game_state state;
+
     sf::Sprite background;
     sf::Texture textureBackground;
     
     textureBackground.loadFromFile("textures/backgrounds/background.jpg");
     background.setTexture(textureBackground);
 
-    sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Tetorisu", sf::Style::None);
-    window.setFramerateLimit(60);
-
     sf::Font font;
     font.loadFromFile("fonts/BMgermar.TTF");
-
-    current_game_state state;
 
     TitleScreen titlescreen;
     Settings settings(state);
     Gameplay gameplay(font);
     PauseScreen pausescreen;
     GameOver gameover;
+
+    sf::RenderWindow window(sf::VideoMode(state.windowWidth, state.windowHeight), "Tetorisu");
+    sf::View view(sf::Vector2f(window.getSize().x/2, window.getSize().y/2), sf::Vector2f(state.windowWidth, state.windowHeight));
+    window.setFramerateLimit(60);
 
     sf::Text pause("PAUSE", font, 80);
 
@@ -96,11 +96,18 @@ int main()
                 }
                 state.settingsControls = -1;
             }
+
+            // Redimensionnement de la fenêtre
+            if(event.type == sf::Event::Resized)
+            {
+                float aspectRatio = float(window.getSize().x / float(window.getSize().y));
+                view.setSize(1080*aspectRatio, 1080);
+            }
         }
 
         // Affiche la fenêtre et ses éléments
         
-        // window.set();
+        window.setView(view);
         window.display();
     }
     

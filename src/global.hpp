@@ -25,6 +25,8 @@ struct current_game_state {
     int state = GAME_MENU;
     int settingsControls = -1;
     sf::Keyboard::Key controls[6];
+    int windowWidth;
+    int windowHeight;
 };
 typedef struct current_game_state current_game_state;
 
