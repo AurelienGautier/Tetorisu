@@ -27,6 +27,7 @@ struct current_game_state {
     sf::Keyboard::Key controls[6];
     int windowWidth;
     int windowHeight;
+    sf::Font font;
 };
 typedef struct current_game_state current_game_state;
 

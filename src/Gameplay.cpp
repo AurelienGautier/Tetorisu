@@ -2,7 +2,7 @@
 #include <iostream>
 /*--------------------------------------------------------------------------------------------------------------*/
 
-Gameplay::Gameplay(sf::Font font)
+Gameplay::Gameplay()
 {
     this->reset();
     this->music.openFromFile("sounds/cityRuins.wav");
@@ -10,7 +10,7 @@ Gameplay::Gameplay(sf::Font font)
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-void Gameplay::display(sf::RenderWindow &window, sf::Font font, current_game_state &state, sf::Text &pause)
+void Gameplay::display(sf::RenderWindow &window, current_game_state &state)
 {
     // Met le jeu en pause si la fenêtre n'est pas au premier plan
     if(!window.hasFocus())        
@@ -48,9 +48,9 @@ void Gameplay::display(sf::RenderWindow &window, sf::Font font, current_game_sta
 
 
     grid.display_grid(window);
-    grid.display_score(window, font);
+    grid.display_score(window, state.font);
     grid.display_tetr_to_come(window);
-    this->displayLevel(window, font);
+    this->displayLevel(window, state.font);
 
     this->manageRotation(state);
     this->manageLeftAndRight(state);
@@ -153,7 +153,7 @@ void Gameplay::manageQuickFalling(current_game_state &state)
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-void Gameplay::displayLevel(sf::RenderWindow &window, sf::Font &font)
+void Gameplay::displayLevel(sf::RenderWindow &window, sf::Font font)
 {
     sf::Text level("LEVEL : "+std::to_string(this->level), font, 50);
     level.setPosition(LEVEL_POSITION_X, LEVEL_POSITION_Y);

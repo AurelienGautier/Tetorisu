@@ -45,7 +45,7 @@ class Settings
         void initKeys();
         void initControls(current_game_state &state);
         void changeControl(int control_to_change, int keyPressed, current_game_state &state);
-        void display(sf::RenderWindow &window, sf::Font &font, current_game_state &state);
+        void display(sf::RenderWindow &window, current_game_state &state);
         void settings_manage_clic(sf::Vector2i mousePosition, int left_edge, int up_edge, int down_edge, int action, current_game_state &state);
         void resizeWindow(sf::RenderWindow &window, sf::View view);
 

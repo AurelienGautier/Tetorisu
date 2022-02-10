@@ -8,53 +8,52 @@
 
 int main()
 {
+    // Déclaration de la structure contenant l'état du jeu
     current_game_state state;
+    state.font.loadFromFile("fonts/BMgermar.TTF");
 
+    // Initialisation de l'arrière-plan
     sf::Sprite background;
     sf::Texture textureBackground;
-    
     textureBackground.loadFromFile("textures/backgrounds/background.jpg");
     background.setTexture(textureBackground);
 
-    sf::Font font;
-    font.loadFromFile("fonts/BMgermar.TTF");
-
+    // Déclaration des objets composant le jeu
     TitleScreen titlescreen;
     Settings settings(state);
-    Gameplay gameplay(font);
-    PauseScreen pausescreen;
+    Gameplay gameplay;
+    PauseScreen pausescreen(state);
     GameOver gameover;
 
+    // Création de la fenêtre et de la vue
     sf::RenderWindow window(sf::VideoMode(state.windowWidth, state.windowHeight), "Tetorisu");
     sf::View view(sf::Vector2f(window.getSize().x/2, window.getSize().y/2), sf::Vector2f(state.windowWidth, state.windowHeight));
     window.setFramerateLimit(60);
 
-    sf::Text pause("PAUSE", font, 80);
-
     while (window.isOpen())
     {
-        // vide la fenêtre et affiche l'image de fond
+        // Vide la fenêtre et affiche l'arrrière-plan
         window.clear();
         background.setPosition(0,0);
         window.draw(background);
 
-        // Différents états du jeu
+        // Gestion des différents écrans
         switch(state.state)
         {
             case GAME_MENU:
-                titlescreen.display(window, font, state);
+                titlescreen.display(window, state);
                 break;
             case SETTINGS:
-                settings.display(window, font, state);
+                settings.display(window, state);
                 break;
             case PLAY:
-                gameplay.display(window, font, state, pause);
+                gameplay.display(window, state);
                 break;
             case PAUSE:
-                pausescreen.display(window, font, pause, state);
+                pausescreen.display(window, state);
                 break;
             case GAME_OVER:
-                gameover.display(window, font, state);
+                gameover.display(window, state);
                 break;
             case LEAVE:
                 window.close();
@@ -70,7 +69,7 @@ int main()
                 window.close();
             }
 
-            // Paramétrer les contrôles
+            // Changement des contrôles dans le menu settings
             if(event.type == sf::Event::KeyPressed)
             {
                 switch(state.settingsControls)
@@ -105,8 +104,7 @@ int main()
             }
         }
 
-        // Affiche la fenêtre et ses éléments
-        
+        // Affichage de la fenêtre et de la vue
         window.setView(view);
         window.display();
     }

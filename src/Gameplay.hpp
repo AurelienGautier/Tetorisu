@@ -10,14 +10,14 @@
 class Gameplay
 {
     public:
-        Gameplay(sf::Font font);
-        void display(sf::RenderWindow &window, sf::Font font, current_game_state &state, sf::Text &pause);
+        Gameplay();
+        void display(sf::RenderWindow &window, current_game_state &state);
         void manageRotation(current_game_state &state);
         void manageLeftAndRight(current_game_state &state);
         void manageTetrominoFalling(current_game_state &state);
         void manageInstantFalling(current_game_state &state);
         void manageQuickFalling(current_game_state &state);
-        void displayLevel(sf::RenderWindow &window, sf::Font &font);
+        void displayLevel(sf::RenderWindow &window, sf::Font font);
         void reset();
 
     private:

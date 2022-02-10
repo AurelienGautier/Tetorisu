@@ -2,55 +2,46 @@
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-PauseScreen::PauseScreen() : escapePressed(false)
+PauseScreen::PauseScreen(current_game_state &state) : escapePressed(true)
 {
-
+    pause.setString("PAUSE");
+    pause.setFont(state.font);
+    pause.setCharacterSize(80);
 }
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-void PauseScreen::display(sf::RenderWindow &window, sf::Font font, sf::Text &pause, current_game_state &state)
+void PauseScreen::display(sf::RenderWindow &window, current_game_state &state)
 {
-    // Vérifie si la touche échap est appuyée
-    if(this->escapePressed)
+    if(keyPressed(this->escapePressed, sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)))
     {
-        if(!sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-        {
-            this->escapePressed = false;
-        }
-    }
-
-    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-    {
-        this->escapePressed = true;
-
         state.state = PLAY;
     }
 
-
-    // Permet le rebondissement du menu pause
-    if(pause.getPosition().x >= window.getSize().x - 40*5)
+    // Modifie la position du texte PAUSE
+    if(this->pause.getPosition().x >= window.getSize().x - 40*5)
     {
         this->position_x = -5;
     }
 
-    else if(pause.getPosition().x <= 0)
+    else if(this->pause.getPosition().x <= 0)
     {
         this->position_x = 5;
     }
 
-    if(pause.getPosition().y >= window.getSize().y - 80)
+    if(this->pause.getPosition().y >= window.getSize().y - 80)
     {
         this->position_y = -5;
     }
 
-    else if(pause.getPosition().y <= 0)
+    else if(this->pause.getPosition().y <= 0)
     {
         this->position_y = 5;
     }
 
-    pause.setPosition(pause.getPosition().x + this->position_x, pause.getPosition().y + this->position_y);
-    window.draw(pause);
+    // Place le texte PAUSE au bon endroit
+    this->pause.setPosition(this->pause.getPosition().x + this->position_x, this->pause.getPosition().y + this->position_y);
+    window.draw(this->pause);
 }
 
 /*--------------------------------------------------------------------------------------------------------------*/
