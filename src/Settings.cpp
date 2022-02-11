@@ -94,66 +94,55 @@ void Settings::display(sf::RenderWindow &window, currentGameState &state)
 {
     sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
 
-    // Affichage et utilisation du bouton de retour au menu
-    displayingText(window, "BACK", state.font, 50, BACK_BUTTON_X, BACK_BUTTON_Y);
+    // Initialisation des boutons uniquement affichables
+    Button instantDescent(INSTANT_DESCENT_X, INSTANT_DESCENT_Y, "INSTANT DESCENT", state.font, 50);
+    Button quickDescent(QUICK_DESCENT_X, QUICK_DESCENT_Y, "QUICK DESCENT", state.font, 50);
+    Button leftRotation(LEFT_ROTATE_X, LEFT_ROTATE_Y, "LEFT ROTATION", state.font, 50);
+    Button rightRotation(RIGHT_ROTATE_X, RIGHT_ROTATE_KEY_Y, "RIGHT ROTATION", state.font, 50);
+    Button moveLeft(MOVE_LEFT_X, MOVE_LEFT_Y, "MOVE LEFT", state.font, 50);
+    Button moveRight(MOVE_RIGHT_X, MOVE_RIGHT_Y, "MOVE RIGHT", state.font, 50);
 
-    if(mousePosition.x > BACK_BUTTON_X && mousePosition.x < BACK_BUTTON_X + 100 && mousePosition.y > BACK_BUTTON_Y && mousePosition.y < BACK_BUTTON_Y + 50)
-    {
-        if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
-        {
-            state.state = GAME_MENU;
-        }
-    }
+    // Affichage des boutons uniquement affichables
+    instantDescent.display(window);
+    quickDescent.display(window);
+    leftRotation.display(window);
+    rightRotation.display(window);
+    moveLeft.display(window);
+    moveRight.display(window);
 
-    // Réglage du contrôle de la descente instantannée du tetromino
-    displayingText(window, "INSTANT DESCENT", state.font, 50, INSTANT_DESCENT_X, INSTANT_DESCENT_Y);
-    displayingText(window, keys[INSTANT_DESCENT], state.font, 50, INSTANT_DESCENT_KEY_X, INSTANT_DESCENT_KEY_Y);
-    this->settings_manage_clic(mousePosition, INSTANT_DESCENT_KEY_X, INSTANT_DESCENT_KEY_Y, INSTANT_DESCENT_Y+50, INSTANT_DESCENT, state);
+    // Initialisation des boutons cliquables
+    Button back(BACK_BUTTON_X, BACK_BUTTON_Y, "BACK", state.font, 50);
+    Button instantDescentKey(INSTANT_DESCENT_KEY_X, INSTANT_DESCENT_KEY_Y, keys[INSTANT_DESCENT], state.font, 50);
+    Button quickDescentKey(QUICK_DESCENT_KEY_X, QUICK_DESCENT_KEY_Y, keys[QUICK_DESCENT], state.font, 50);
+    Button leftRotationKey(LEFT_ROTATE_KEY_X, LEFT_ROTATE_KEY_Y, keys[LEFT_ROTATION], state.font, 50);
+    Button rightRotationKey(RIGHT_ROTATE_KEY_X, RIGHT_ROTATE_KEY_Y, keys[RIGHT_ROTATION], state.font, 50);
+    Button moveLeftKey(MOVE_LEFT_KEY_X, MOVE_LEFT_KEY_Y, keys[MOVE_LEFT], state.font, 50);
+    Button moveRightKey(MOVE_RIGHT_KEY_X, MOVE_RIGHT_KEY_Y, keys[MOVE_RIGHT], state.font, 50);
 
-    // Réglage du contrôle de la descente rapide du tetromino
-    displayingText(window, "QUICK DESCENT", state.font, 50, QUICK_DESCENT_X, QUICK_DESCENT_Y);
-    displayingText(window, keys[QUICK_DESCENT], state.font, 50, QUICK_DESCENT_KEY_X, QUICK_DESCENT_KEY_Y);
-    this->settings_manage_clic(mousePosition, QUICK_DESCENT_KEY_X, QUICK_DESCENT_KEY_Y, QUICK_DESCENT_Y+50, QUICK_DESCENT, state);
+    // Affichage des boutons cliquables
+    back.display(window);
+    instantDescentKey.display(window);
+    quickDescentKey.display(window);
+    leftRotationKey.display(window);
+    rightRotationKey.display(window);
+    moveLeftKey.display(window);
+    moveRightKey.display(window);
 
-    // Réglage du contrôle de la rotation gauche du tetromino
-    displayingText(window, "LEFT ROTATION", state.font, 50, LEFT_ROTATE_X, LEFT_ROTATE_Y);
-    displayingText(window, keys[LEFT_ROTATION], state.font, 50, LEFT_ROTATE_KEY_X, LEFT_ROTATE_KEY_Y);
-    this->settings_manage_clic(mousePosition, LEFT_ROTATE_KEY_X, LEFT_ROTATE_KEY_Y, LEFT_ROTATE_Y+50, LEFT_ROTATION, state);
-
-    // Réglage du contrôle de la rotation droite du tetromino
-    displayingText(window, "RIGHT ROTATION", state.font, 50, RIGHT_ROTATE_X, RIGHT_ROTATE_Y);
-    displayingText(window, keys[RIGHT_ROTATION], state.font, 50, RIGHT_ROTATE_KEY_X, RIGHT_ROTATE_KEY_Y);
-    this->settings_manage_clic(mousePosition, RIGHT_ROTATE_KEY_X, RIGHT_ROTATE_KEY_Y, RIGHT_ROTATE_Y+50, RIGHT_ROTATION, state);
-
-    // Réglage du contrôle du mouvement vers la gauche du tetromino
-    displayingText(window, "MOVE LEFT", state.font, 50, MOVE_LEFT_X, MOVE_LEFT_Y);
-    displayingText(window, keys[MOVE_LEFT], state.font, 50, MOVE_LEFT_KEY_X, MOVE_LEFT_KEY_Y);
-    this->settings_manage_clic(mousePosition, MOVE_LEFT_KEY_X, MOVE_LEFT_KEY_Y, MOVE_LEFT_Y+50, MOVE_LEFT, state);
-
-    // Réglage du contrôle du mouvement vers la droite du tetromino
-    displayingText(window, "MOVE RIGHT", state.font, 50, MOVE_RIGHT_X, MOVE_RIGHT_Y);
-    displayingText(window, keys[MOVE_RIGHT], state.font, 50, MOVE_RIGHT_KEY_X, MOVE_RIGHT_KEY_Y);
-    this->settings_manage_clic(mousePosition, MOVE_RIGHT_KEY_X, MOVE_RIGHT_KEY_Y, MOVE_RIGHT_Y+50, MOVE_RIGHT, state); 
-}
-
-/*--------------------------------------------------------------------------------------------------------------*/
-
-void Settings::settings_manage_clic(sf::Vector2i mousePosition, int left_edge, int up_edge, int down_edge, int action, currentGameState &state)
-{
-    if(mousePosition.x > left_edge && mousePosition.y > up_edge && mousePosition.y < down_edge)
-    {
-        if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
-        {
-            state.settingsControls = action;
-        }
-    }
-}
-
-/*--------------------------------------------------------------------------------------------------------------*/
-
-void resizeWindow(sf::RenderWindow &window, sf::View view)
-{
-    float aspectRatio = float(window.getSize().x / float(window.getSize().y));
+    // Clique des boutons
+    if(back.isClicked(mousePosition))
+        state.state = GAME_MENU;
+    else if(instantDescentKey.isClicked(mousePosition))
+        state.settingsControls = INSTANT_DESCENT;
+    else if(quickDescentKey.isClicked(mousePosition))
+        state.settingsControls = QUICK_DESCENT;
+    else if(leftRotationKey.isClicked(mousePosition))
+        state.settingsControls = LEFT_ROTATION;
+    else if(rightRotationKey.isClicked(mousePosition))
+        state.settingsControls = RIGHT_ROTATION;
+    else if(moveLeftKey.isClicked(mousePosition))
+        state.settingsControls = MOVE_LEFT;
+    else if(moveRightKey.isClicked(mousePosition))
+        state.settingsControls = MOVE_RIGHT;
 }
 
 /*--------------------------------------------------------------------------------------------------------------*/

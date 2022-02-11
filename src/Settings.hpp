@@ -2,6 +2,7 @@
 
 #include "global.hpp"
 #include <fstream>
+#include "Button.hpp"
 
 constexpr int SPACE_BETWEEN_SETTINGS = 100;
 
