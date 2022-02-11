@@ -4,8 +4,8 @@
 class PauseScreen
 {
     public:
-        PauseScreen(current_game_state &state);
-        void display(sf::RenderWindow &window, current_game_state &state);
+        PauseScreen(currentGameState &state);
+        void display(sf::RenderWindow &window, currentGameState &state);
 
     private:
         int position_x, position_y;

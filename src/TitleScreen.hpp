@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "global.hpp"
-#include <map>
+#include "Button.hpp"
 
 #define SPACE_BETWEEN 100
 
@@ -20,9 +20,11 @@
 class TitleScreen
 {
     public:
-        TitleScreen();
-        void display(sf::RenderWindow &window, current_game_state &state);
-        void titlescreen_manage_clic(sf::Vector2i mousePosition, int left_edge, int right_edge, int up_edge, int down_edge, int action, current_game_state &state);
+        TitleScreen(currentGameState &state);
+        void display(sf::RenderWindow &window, currentGameState &state);
+        void titlescreen_manage_clic(sf::Vector2i mousePosition, int left_edge, int right_edge, int up_edge, int down_edge, int action, currentGameState &state);
         
     private:
+        int buttonPoliceSize = 50;
+        int titlePoliceSize = 80;
 };

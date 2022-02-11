@@ -10,7 +10,7 @@ Gameplay::Gameplay()
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-void Gameplay::display(sf::RenderWindow &window, current_game_state &state)
+void Gameplay::display(sf::RenderWindow &window, currentGameState &state)
 {
     // Met le jeu en pause si la fenêtre n'est pas au premier plan
     if(!window.hasFocus())        
@@ -61,7 +61,7 @@ void Gameplay::display(sf::RenderWindow &window, current_game_state &state)
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-void Gameplay::manageRotation(current_game_state &state)
+void Gameplay::manageRotation(currentGameState &state)
 {
     // Rotation gauche
     if(keyPressed(this->Wpressed, sf::Keyboard::isKeyPressed(state.controls[LEFT_ROTATION])))
@@ -78,7 +78,7 @@ void Gameplay::manageRotation(current_game_state &state)
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-void Gameplay::manageLeftAndRight(current_game_state &state)
+void Gameplay::manageLeftAndRight(currentGameState &state)
 {
     if(this->move_timer == 0)
     {
@@ -103,7 +103,7 @@ void Gameplay::manageLeftAndRight(current_game_state &state)
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-void Gameplay::manageTetrominoFalling(current_game_state &state)
+void Gameplay::manageTetrominoFalling(currentGameState &state)
 {
     if(this->time == 0)
     {
@@ -125,7 +125,7 @@ void Gameplay::manageTetrominoFalling(current_game_state &state)
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-void Gameplay::manageInstantFalling(current_game_state &state)
+void Gameplay::manageInstantFalling(currentGameState &state)
 {
     if(keyPressed(spacePressed, sf::Keyboard::isKeyPressed(state.controls[INSTANT_DESCENT])))
     {
@@ -135,7 +135,7 @@ void Gameplay::manageInstantFalling(current_game_state &state)
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-void Gameplay::manageQuickFalling(current_game_state &state)
+void Gameplay::manageQuickFalling(currentGameState &state)
 {
     if(this->DownPressed)
     {

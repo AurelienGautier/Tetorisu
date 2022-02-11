@@ -21,7 +21,7 @@ enum
     MOVE_RIGHT
 };
 
-struct current_game_state {
+struct currentGameState {
     int state = GAME_MENU;
     int settingsControls = -1;
     sf::Keyboard::Key controls[6];
@@ -29,11 +29,11 @@ struct current_game_state {
     int windowHeight;
     sf::Font font;
 };
-typedef struct current_game_state current_game_state;
+typedef struct currentGameState currentGameState;
 
 
-void displaying_text(sf::RenderWindow &window, std::string text_to_display, sf::Font &font, int size, int position_x, int position_y);
-void manage_clic(int left_edge, int up_edge, int down_edge, int action, current_game_state &state);
+void displayingText(sf::RenderWindow &window, std::string textToDisplay, sf::Font &font, int size, int positionX, int positionY);
+void manage_clic(int left_edge, int up_edge, int down_edge, int action, currentGameState &state);
 bool keyPressed(bool &keyPressed, const bool keyPressedSF);
 
 

@@ -11,12 +11,12 @@ class Gameplay
 {
     public:
         Gameplay();
-        void display(sf::RenderWindow &window, current_game_state &state);
-        void manageRotation(current_game_state &state);
-        void manageLeftAndRight(current_game_state &state);
-        void manageTetrominoFalling(current_game_state &state);
-        void manageInstantFalling(current_game_state &state);
-        void manageQuickFalling(current_game_state &state);
+        void display(sf::RenderWindow &window, currentGameState &state);
+        void manageRotation(currentGameState &state);
+        void manageLeftAndRight(currentGameState &state);
+        void manageTetrominoFalling(currentGameState &state);
+        void manageInstantFalling(currentGameState &state);
+        void manageQuickFalling(currentGameState &state);
         void displayLevel(sf::RenderWindow &window, sf::Font font);
         void reset();
 

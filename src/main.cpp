@@ -9,7 +9,7 @@
 int main()
 {
     // Déclaration de la structure contenant l'état du jeu
-    current_game_state state;
+    currentGameState state;
     state.font.loadFromFile("fonts/BMgermar.TTF");
 
     // Initialisation de l'arrière-plan
@@ -19,7 +19,7 @@ int main()
     background.setTexture(textureBackground);
 
     // Déclaration des objets composant le jeu
-    TitleScreen titlescreen;
+    TitleScreen titlescreen(state);
     Settings settings(state);
     Gameplay gameplay;
     PauseScreen pausescreen(state);

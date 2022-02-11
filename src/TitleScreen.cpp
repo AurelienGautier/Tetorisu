@@ -1,38 +1,36 @@
 #include "TitleScreen.hpp"
-#include <iostream>
+#include <iostream> // temporaire
 
-TitleScreen::TitleScreen()
+TitleScreen::TitleScreen(currentGameState &state)
 {
-
+    
 }
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-void TitleScreen::display(sf::RenderWindow &window, current_game_state &state)
+void TitleScreen::display(sf::RenderWindow &window, currentGameState &state)
 {
     sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
 
-    displaying_text(window, "TETORISU", state.font, 80, TITLE_POSITION_X, TITLE_POSITION_Y);
+    displayingText(window, "TETORISU", state.font, 80, TITLE_POSITION_X, TITLE_POSITION_Y);
 
-    displaying_text(window, "PLAY", state.font, 50, PLAY_POSITION_X, PLAY_POSITION_Y);
-    this->titlescreen_manage_clic(mousePosition, PLAY_POSITION_X, PLAY_POSITION_X+100, PLAY_POSITION_Y, PLAY_POSITION_Y+50, PLAY, state);
+    // Initialisation des boutons
+    Button play(PLAY_POSITION_Y, PLAY_POSITION_X, "PLAY", state.font, this->buttonPoliceSize);
+    Button settings(SETTINGS_POSITION_Y, SETTINGS_POSITION_X, "SETTINGS", state.font, this->buttonPoliceSize);
+    Button leave(LEAVE_POSITION_Y, LEAVE_POSITION_X, "LEAVE", state.font, this->buttonPoliceSize);
 
-    displaying_text(window, "SETTINGS", state.font, 50, SETTINGS_POSITION_X, SETTINGS_POSITION_Y);
-    this->titlescreen_manage_clic(mousePosition, SETTINGS_POSITION_X, SETTINGS_POSITION_X+200, SETTINGS_POSITION_Y, SETTINGS_POSITION_Y+50, SETTINGS, state);
+    // Affichage des boutons
+    play.display(window);
+    settings.display(window);
+    leave.display(window);
 
-    displaying_text(window, "LEAVE", state.font, 50, LEAVE_POSITION_X, LEAVE_POSITION_Y);
-    this->titlescreen_manage_clic(mousePosition, LEAVE_POSITION_X, LEAVE_POSITION_X+125, LEAVE_POSITION_Y, LEAVE_POSITION_Y+50, LEAVE, state);
+    // Click sur les boutons
+    if(play.isClicked(mousePosition))
+        state.state = PLAY;
+    else if(settings.isClicked(mousePosition))
+        state.state = SETTINGS;
+    else if(leave.isClicked(mousePosition))
+        state.state = LEAVE;
 }
 
 /*--------------------------------------------------------------------------------------------------------------*/
-
-void TitleScreen::titlescreen_manage_clic(sf::Vector2i mousePosition, int left_edge, int right_edge, int up_edge, int down_edge, int action, current_game_state &state)
-{
-    if(mousePosition.x > left_edge && mousePosition.x < right_edge && mousePosition.y > up_edge && mousePosition.y < down_edge)
-    {
-        if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
-        {
-            state.state = action;
-        }
-    }
-}

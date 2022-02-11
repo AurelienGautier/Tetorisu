@@ -9,6 +9,7 @@
 
 #define YES_X RETRY_X
 #define YES_Y RETRY_Y+100
+
 #define NO_X YES_X + 200
 #define NO_Y YES_Y
 
@@ -16,9 +17,6 @@ class GameOver
 {
     public:
         GameOver();
-        void display(sf::RenderWindow &window, current_game_state &state);
-        void gameover_manage_clic(sf::Vector2i mousePosition, int left_edge, int right_edge, int up_edge, int down_edge, int action, current_game_state &state);
-
-    private:
-
+        void display(sf::RenderWindow &window, currentGameState &state);
+        void gameover_manage_clic(sf::Vector2i mousePosition, int left_edge, int right_edge, int up_edge, int down_edge, int action, currentGameState &state);
 };
