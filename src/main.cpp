@@ -19,7 +19,7 @@ int main()
     background.setTexture(textureBackground);
 
     // Déclaration des objets composant le jeu
-    TitleScreen titlescreen(state);
+    TitleScreen titlescreen;
     Settings settings(state);
     Gameplay gameplay;
     PauseScreen pausescreen(state);

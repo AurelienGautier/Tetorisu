@@ -1,5 +1,6 @@
 #pragma once
 #include "global.hpp"
+#include "Button.hpp"
 
 #define GAMEOVER_X window.getSize().x/3
 #define GAMEOVER_Y window.getSize().y/4

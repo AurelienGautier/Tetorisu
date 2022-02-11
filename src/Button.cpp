@@ -15,7 +15,7 @@ Button::Button(int upEdge, int leftEdge)
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-Button::Button(int upEdge, int leftEdge, std::string string, sf::Font font, int charSize)
+Button::Button(int leftEdge, int upEdge, std::string string, sf::Font font, int charSize)
 {
     this->setPos(upEdge, leftEdge);
     this->setText(string, font, charSize);

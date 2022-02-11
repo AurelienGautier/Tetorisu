@@ -6,7 +6,7 @@ class Button
     public:
         Button();
         Button(int upEdge, int leftEdge);
-        Button(int upEdge, int leftEdge, std::string string, sf::Font font, int charSize);
+        Button(int leftEdge, int upEdge, std::string string, sf::Font font, int charSize);
 
         void setPos(int upEdge, int leftEdge);
         void setText(std::string string, sf::Font font, int charSize);
