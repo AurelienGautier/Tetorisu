@@ -1,4 +1,4 @@
-#include "Settings.hpp"
+#include "headers/Settings.hpp"
 #include <iostream>
 
 Settings::Settings(currentGameState &state)

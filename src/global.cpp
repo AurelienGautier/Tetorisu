@@ -1,5 +1,4 @@
-#include "global.hpp"
-#include <iostream>
+#include "headers/global.hpp"
 
 void displayingText(sf::RenderWindow &window, std::string textToDisplay, sf::Font &font, int size, int positionX, int positionY)
 {

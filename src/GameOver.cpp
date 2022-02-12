@@ -1,4 +1,4 @@
-#include "GameOver.hpp"
+#include "headers/GameOver.hpp"
 
 GameOver::GameOver()
 {

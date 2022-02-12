@@ -1,5 +1,4 @@
-#include "TitleScreen.hpp"
-#include <iostream> // temporaire
+#include "headers/TitleScreen.hpp"
 
 TitleScreen::TitleScreen()
 {

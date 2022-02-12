@@ -1,10 +1,10 @@
 #include <SFML/Graphics.hpp>
-#include "global.hpp"
-#include "TitleScreen.hpp"
-#include "Settings.hpp"
-#include "Gameplay.hpp"
-#include "PauseScreen.hpp"
-#include "GameOver.hpp"
+#include "headers/global.hpp"
+#include "headers/TitleScreen.hpp"
+#include "headers/Settings.hpp"
+#include "headers/Gameplay.hpp"
+#include "headers/PauseScreen.hpp"
+#include "headers/GameOver.hpp"
 
 int main()
 {

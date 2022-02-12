@@ -1,5 +1,5 @@
-#include "global.hpp"
-#include "Grid.hpp"
+#include "headers/global.hpp"
+#include "headers/Grid.hpp"
 #include <iostream>
 #include <random>
 #include <chrono>
@@ -562,12 +562,22 @@ void Grid::reset()
         }
     }
 
-    for (char i = 0; i < 7; i++)
+    for (char i = 0; i < 6; i++)
     {
-        // Choisit un tetromino aléatoire
+        // Choisit un nombre aléatoire
         unsigned seed = std::chrono::steady_clock::now().time_since_epoch().count();
         std::default_random_engine engine(seed + 3*i);
         std::uniform_int_distribution<char> distribution(0, 6);
+        int randomNb = distribution(engine);
+
+        // Modifie le nombre aléatoire si le tetromino correspondant est géjà généré
+        for (char j = 0; j < i; j++)
+        {
+            if(randomNb == this->current_tetrominos[j])
+            {
+
+            }
+        }
         this->current_tetrominos[i] = distribution(engine);
     }
 

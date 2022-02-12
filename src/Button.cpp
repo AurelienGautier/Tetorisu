@@ -1,5 +1,4 @@
-#include "Button.hpp"
-#include <iostream> // temporaire
+#include "headers/Button.hpp"
 
 Button::Button() 
 {

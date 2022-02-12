@@ -1,5 +1,5 @@
-#include "Gameplay.hpp"
-#include <iostream>
+#include "headers/Gameplay.hpp"
+
 /*--------------------------------------------------------------------------------------------------------------*/
 
 Gameplay::Gameplay()
