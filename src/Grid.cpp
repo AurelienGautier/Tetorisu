@@ -472,10 +472,10 @@ bool Grid::check_rotate()
             if(this->tetromino.tetrominos[this->current_tetrominos[0]][this->current_position+1][i][j] == 2)
             {
                 if(this->matrice[this->tetromino.position_y+i][this->tetromino.position_x+j] == 1 || 
-                   this->tetromino.position_x+j < 0 || 
-                   this->tetromino.position_x+j > 9 || 
-                   this->tetromino.position_y+i > 19 || 
-                   this->tetromino.position_y+i < 0)
+                   (this->tetromino.position_x+j < 0 && !this->wallKick('L')) || 
+                   (this->tetromino.position_x+j > 9 && !this->wallKick('R')) || 
+                   (this->tetromino.position_y+i > 19 && !this->wallKick('D')) || 
+                   (this->tetromino.position_y+i < 0 && !this->wallKick('U')))
                 {
                     return false;
                 }
@@ -490,27 +490,36 @@ bool Grid::check_rotate()
 
 bool Grid::wallKick(char side)
 {
-    if(side == 'R')
-    {
+    bool wallKick = true;
 
+    switch(side)
+    {
+        case 'L':
+            for(char i = 0; i < 4; i++)
+            {
+                for(char j = 0; j < 4; j++)
+                {
+                    if(this->matrice[this->tetromino.position_x+j+1][this->tetromino.position_y+i] == 1)
+                    {
+                        wallKick = false;
+                    }
+                }
+            }
+
+            if(wallKick)
+            {
+                this->move_tetromino_right();
+            }
+            break;
+        case 'R':
+            break;
+        case 'U':
+            break;
+        case 'D':
+            break;
     }
 
-    else if(side == 'L')
-    {
-
-    }
-
-    else if(side == 'U')
-    {
-
-    }
-
-    else if(side == 'D')
-    {
-
-    }
-
-    return false;
+    return true;
 }
 
 /*--------------------------------------------------------------------------------------------------------------*/
