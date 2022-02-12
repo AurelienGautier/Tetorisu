@@ -471,7 +471,11 @@ bool Grid::check_rotate()
         {
             if(this->tetromino.tetrominos[this->current_tetrominos[0]][this->current_position+1][i][j] == 2)
             {
-                if(this->matrice[this->tetromino.position_y+i][this->tetromino.position_x+j] == 1 || this->tetromino.position_x+j < 0 || this->tetromino.position_x+j > 9 || this->tetromino.position_y+i > 19 || this->tetromino.position_y+i < 0)
+                if(this->matrice[this->tetromino.position_y+i][this->tetromino.position_x+j] == 1 || 
+                   this->tetromino.position_x+j < 0 || 
+                   this->tetromino.position_x+j > 9 || 
+                   this->tetromino.position_y+i > 19 || 
+                   this->tetromino.position_y+i < 0)
                 {
                     return false;
                 }
@@ -480,6 +484,33 @@ bool Grid::check_rotate()
     }
 
     return true;
+}
+
+/*--------------------------------------------------------------------------------------------------------------*/
+
+bool Grid::wallKick(char side)
+{
+    if(side == 'R')
+    {
+
+    }
+
+    else if(side == 'L')
+    {
+
+    }
+
+    else if(side == 'U')
+    {
+
+    }
+
+    else if(side == 'D')
+    {
+
+    }
+
+    return false;
 }
 
 /*--------------------------------------------------------------------------------------------------------------*/
@@ -575,10 +606,13 @@ void Grid::reset()
         {
             if(randomNb == this->current_tetrominos[j])
             {
-
+                if(randomNb == 6)
+                    randomNb = 0;
+                else
+                    randomNb++;
             }
         }
-        this->current_tetrominos[i] = distribution(engine);
+        this->current_tetrominos[i] = randomNb;
     }
 
     this->initialize_tetromino();

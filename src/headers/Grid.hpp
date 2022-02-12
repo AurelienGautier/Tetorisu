@@ -21,6 +21,7 @@ class Grid
 
         void rotate(char side);
         bool check_rotate();
+        bool wallKick(char side);
 
         void go_down();
 
