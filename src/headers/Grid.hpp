@@ -21,7 +21,7 @@ class Grid
 
         void rotate(char side);
         bool check_rotate();
-        bool wallKick(char side);
+        bool wallKick();
 
         void go_down();
 
@@ -263,5 +263,4 @@ class Grid
         struct current_tetromino tetromino;
 
         int score;
-        int countWallKick;
 };

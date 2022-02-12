@@ -493,94 +493,81 @@ bool Grid::check_rotate()
     std::cout << "sans wallkick : " << rotate << std::endl;
 
     if(!rotate)
-        rotate = wallKick('U');
-    std::cout << "après wallkick haut : " << rotate << std::endl;
-    if(!rotate)
-        rotate = wallKick('L');
-    std::cout << "après wallkick gauche : " << rotate << std::endl;
-    if(!rotate)
-        rotate = wallKick('D');
-    // if(!rotate)
-    //     rotate = wallKick('R');
-
-    std::cout << "après wallkick : " << rotate << std::endl;
+        rotate = this->wallKick();
 
     return rotate;
 }
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-bool Grid::wallKick(char side)
+bool Grid::wallKick()
 {
     bool wallKick = true;
+    bool iShape = false;
     int nextPosition;
     if(this->current_position == 3)
         nextPosition = 0;
     else
         nextPosition = this->current_position + 1;
+    int gap = 0;
 
-    switch(side)
+    // WallKick de la droite vers la gauche
+    for(char i = 0; i < 4; i++)
     {
-        case 'U':
-            for(char i = 0; i < 4; i++)
+        for(char j = 0; j < 4; j++)
+        {
+            if(this->tetromino.tetrominos[this->current_tetrominos[0]][nextPosition][i][j] == 2)
             {
-                for(char j = 0; j < 4; j++)
+                if(this->matrice[this->tetromino.position_y+i][this->tetromino.position_x+j-1] == 1 ||
+                   this->tetromino.position_x+j-1 < 0)
                 {
-                    if(this->tetromino.tetrominos[this->current_tetrominos[0]][nextPosition][i][j] == 2)
-                    {
-                        if(this->matrice[this->tetromino.position_y+i+1][this->tetromino.position_x+j] == 1 ||
-                           this->tetromino.position_y+i+1 < 0)
-                        {
-                            wallKick = false;
-                        }
-                    }
+                    wallKick = false;
                 }
             }
+        }
+    }
+    if(wallKick)
+    {
+        this->move_tetromino_left();
+        return true;
+    }
 
-            if(wallKick)
-                this->fall_tetromino();
-            break;
 
-        case 'L':
-            for(char i = 0; i < 4; i++)
+    // Wallkick de la gauche vers la droite
+    wallKick = true;
+    gap = 0;
+    for(char i = 0; i < 4; i++)
+    {
+        for(char j = 0; j < 4; j++)
+        {
+            if(this->tetromino.tetrominos[this->current_tetrominos[0]][nextPosition][i][j] == 2)
             {
-                for(char j = 0; j < 4; j++)
+                std::cout << "Position actuelle : " << (int)this->tetromino.position_x << std::endl;
+                if(this->current_tetrominos[0] == 0 && this->tetromino.position_x == -2)
                 {
-                    if(this->tetromino.tetrominos[this->current_tetrominos[0]][nextPosition][i][j] == 2)
+                    iShape = true;
+
+                    if(this->matrice[this->tetromino.position_y+i][this->tetromino.position_x+j+2] == 1 ||
+                       this->tetromino.position_x+j+2 > 19)
                     {
-                        if(this->matrice[this->tetromino.position_y+i][this->tetromino.position_x+j+1] == 1 ||
-                           this->tetromino.position_x+j+1 > 10)
-                        {
-                            wallKick = false;
-                        }
+                        wallKick = false;
                     }
                 }
-            }
 
-            if(wallKick)
-                this->move_tetromino_right();
-            break;
-
-        case 'D':
-            for(char i = 0; i < 4; i++)
-            {
-                for(char j = 0; j < 4; j++)
+                else if(this->matrice[this->tetromino.position_y+i][this->tetromino.position_x+j+1] == 1 ||
+                   this->tetromino.position_x+j+1 > 19)
                 {
-                    if(this->tetromino.tetrominos[this->current_tetrominos[0]][nextPosition][i][j] == 2)
-                    {
-                        if(this->matrice[this->tetromino.position_y+i][this->tetromino.position_x+j-1] == 1)
-                        {
-                            wallKick = false;
-                        }
-                    }
+                    wallKick = false;
                 }
             }
-
-            if(wallKick)
-                this->move_tetromino_left();
-            break;
-        case 'R':
-            break;
+        }
+    }
+    if(wallKick)
+    {
+        this->move_tetromino_right();
+        if(iShape)
+            this->move_tetromino_right();
+        return true;
     }
 
     return wallKick;
@@ -656,7 +643,6 @@ void Grid::reset()
     this->horizontal_move = false;
     this->rotation_enabled = false;
     this->score = 0;
-    this->countWallKick = 0;
 
     for (char i = 0; i < 20; i++)
     {
