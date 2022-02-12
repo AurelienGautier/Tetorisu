@@ -263,4 +263,5 @@ class Grid
         struct current_tetromino tetromino;
 
         int score;
+        int countWallKick;
 };
