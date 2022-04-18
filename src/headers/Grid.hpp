@@ -1,266 +1,68 @@
 #pragma once
+
+#include <array>
+#include <vector>
 #include <SFML/Graphics.hpp>
+#include "Global.hpp"
 
-class Grid 
+enum
 {
-    public:
-        Grid();
-        bool initialize_tetromino(); // retourne false si le nouveau tetromino apparaît sur un autre (si game over)
-        void display_grid(sf::RenderWindow &window);
-        void display_tetromino();
+	I_SHAPE,
+	J_SHAPE,
+	L_SHAPE,
+	Z_SHAPE,
+	T_SHAPE,
+	S_SHAPE,
+	O_SHAPE,
+	GHOST,
+	EMPTY,
+	CURRENT_BLOCK
+};
 
-        void move_tetromino_left();
-        bool check_left();
-        void move_tetromino_right();
-        bool check_right();
-        bool fall_tetromino(); // retourne false à la méthode manage_tetromino_falling (gameplay.cpp) si !initialize_tetromino
-        bool check_fall();
 
-        void landing();
-        void clear_lines();
+class Grid
+{
+private:
+	std::array<sf::Vector2i, 4> m_hitablePoints;
+	std::array<sf::Vector2i, 4> posToDelete;
+	std::array<sf::Vector2i, 4> ghost;
+	std::array<std::array<int, GRID_HEIGHT>, GRID_WIDTH> grid;
+	std::array<sf::Color, 9> colours;
+	char fall_timer;
+	char move_timer;
+	bool tetroSet;
+	sf::Vector2i leftHandCorner;
+	bool rPressed;
+	bool spacePressed;
+	bool cPressed;
+	std::vector<std::vector<char>> current_tetros_matrix;
+	std::array<char, 7> tetros_to_come;
+	std::array<char, 7> tetros_selected;
+	char nb_selected_tetros;
+	bool can_use_hold;
+	char tetros_in_hold;
 
-        void rotate(char side);
-        bool check_rotate();
-        bool wallKick();
+	void replace_cases(std::array<sf::Vector2i, 4>& positions, char casetype_to_replace, char replacing_case);
+	void actualize_tetr_position();
+	char get_random_tetromino();
+	void display(sf::RenderWindow& window);
+	void set_tetromino(bool for_hold);
+	void set_matrix();
+	std::array<sf::Vector2i, 4> set_positions(char shape);
+	bool check_next_pos(std::array<sf::Vector2i, 4> coordinates, char x, char y);
+	void move_next_pos(std::array<sf::Vector2i, 4>& coordinates, char x, char y);
+	bool check_rotate();
+	void rotate();
+	bool wall_kick(std::vector<std::vector<char>> test_matrix);
+	void clear_lines();
+	void landing();
+	bool check_set_pos(std::array<sf::Vector2i, 4> positions);
+	void use_hold();
+	std::array<sf::Vector2i, 4> matrix_to_pos(std::vector<std::vector<char>> matrix);
+	std::vector<std::vector<char>> pos_to_matrix(std::array<sf::Vector2i, 4> pos, char shape, sf::Vector2i corner);
+	std::array<sf::Vector2i, 4> get_ghost_pos();
 
-        void go_down();
-
-        void display_score(sf::RenderWindow &window, sf::Font font);
-        int get_score() {return this->score;}
-
-        void display_tetr_to_come(sf::RenderWindow &window);
-        void manage_hold(sf::RenderWindow &window);
-
-        void reset(); // Initialise ou réinitialise tous les attributs afin de commencer ou recommencer une partie
-
-    private:
-        int matrice[20][10] = {0};
-        sf::Sprite cases;
-
-        sf::Texture displayed_textures[20][10];
-        sf::Texture textures[8];
-
-        bool horizontal_move, rotation_enabled;
-
-        int current_tetrominos[7], current_position;
-        struct current_tetromino {
-            char matrice[4][4] = {0};
-
-            char tetrominos[7][4][4][4] {
-                {
-                    {
-                        {0,0,0,0},
-                        {0,0,0,0},
-                        {2,2,2,2},
-                        {0,0,0,0}
-                    },
-
-                    {
-                        {0,0,2,0},
-                        {0,0,2,0},
-                        {0,0,2,0},
-                        {0,0,2,0}
-                    },
-
-                    {
-                        {0,0,0,0},
-                        {0,0,0,0},
-                        {2,2,2,2},
-                        {0,0,0,0}
-                    },
-
-                    {
-                        {0,0,2,0},
-                        {0,0,2,0},
-                        {0,0,2,0},
-                        {0,0,2,0}
-                    }
-                },
-
-                {
-                    {
-                        {0,0,0,0},
-                        {2,2,2,0},
-                        {0,0,2,0},
-                        {0,0,0,0}
-                    },
-
-                    {
-                        {0,2,0,0},
-                        {0,2,0,0},
-                        {2,2,0,0},
-                        {0,0,0,0}
-                    },
-
-                    {
-                        {2,0,0,0},
-                        {2,2,2,0},
-                        {0,0,0,0},
-                        {0,0,0,0}
-                    },
-
-                    {
-                        {0,2,2,0},
-                        {0,2,0,0},
-                        {0,2,0,0},
-                        {0,0,0,0}
-                    }
-                },
-
-                {
-                    {
-                        {0,0,0,0},
-                        {2,2,2,0},
-                        {2,0,0,0},
-                        {0,0,0,0}
-                    },
-
-                    {
-                        {2,2,0,0},
-                        {0,2,0,0},
-                        {0,2,0,0},
-                        {0,0,0,0}
-                    },
-
-                    {
-                        {0,0,2,0},
-                        {2,2,2,0},
-                        {0,0,0,0},
-                        {0,0,0,0}
-                    },
-
-                    {
-                        {0,2,0,0},
-                        {0,2,0,0},
-                        {0,2,2,0},
-                        {0,0,0,0}
-                    }
-                },
-
-                {
-                    {
-                        {0,0,0,0},
-                        {2,2,0,0},
-                        {0,2,2,0},
-                        {0,0,0,0}
-                    },
-
-                    {
-                        {0,0,2,0},
-                        {0,2,2,0},
-                        {0,2,0,0},
-                        {0,0,0,0}
-                    },
-
-                    {
-                        {0,0,0,0},
-                        {2,2,0,0},
-                        {0,2,2,0},
-                        {0,0,0,0}
-                    },
-
-                    {
-                        {0,0,2,0},
-                        {0,2,2,0},
-                        {0,2,0,0},
-                        {0,0,0,0}
-                    }
-                },
-
-                {
-                    {
-                        {0,0,0,0},
-                        {2,2,2,0},
-                        {0,2,0,0},
-                        {0,0,0,0}
-                    },
-
-                    {
-                        {0,2,0,0},
-                        {2,2,0,0},
-                        {0,2,0,0},
-                        {0,0,0,0}
-                    },
-
-                    {
-                        {0,2,0,0},
-                        {2,2,2,0},
-                        {0,0,0,0},
-                        {0,0,0,0}
-                    },
-
-                    {
-                        {0,2,0,0},
-                        {0,2,2,0},
-                        {0,2,0,0},
-                        {0,0,0,0}
-                    }
-                },
-
-                {
-                    {
-                        {0,0,0,0},
-                        {0,2,2,0},
-                        {2,2,0,0},
-                        {0,0,0,0}
-                    },
-
-                    {
-                        {0,2,0,0},
-                        {0,2,2,0},
-                        {0,0,2,0},
-                        {0,0,0,0}
-                    },
-
-                    {
-                        {0,0,0,0},
-                        {0,2,2,0},
-                        {2,2,0,0},
-                        {0,0,0,0}
-                    },
-
-                    {
-                        {0,2,0,0},
-                        {0,2,2,0},
-                        {0,0,2,0},
-                        {0,0,0,0}
-                    }
-                },
-
-                {
-                    {
-                        {0,0,0,0},
-                        {0,2,2,0},
-                        {0,2,2,0},
-                        {0,0,0,0}
-                    },
-
-                    {
-                        {0,0,0,0},
-                        {0,2,2,0},
-                        {0,2,2,0},
-                        {0,0,0,0}
-                    },
-
-                    {
-                        {0,0,0,0},
-                        {0,2,2,0},
-                        {0,2,2,0},
-                        {0,0,0,0}
-                    },
-
-                    {
-                        {0,0,0,0},
-                        {0,2,2,0},
-                        {0,2,2,0},
-                        {0,0,0,0}
-                    }
-                }
-            };
-            
-            char position_x, position_y;
-        };
-        struct current_tetromino tetromino;
-
-        int score;
+public:
+	Grid();
+	void manage_events(sf::RenderWindow& window);
 };

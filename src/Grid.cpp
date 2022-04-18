@@ -1,679 +1,541 @@
-#include "headers/global.hpp"
 #include "headers/Grid.hpp"
-#include <iostream>
 #include <random>
-#include <chrono>
+#include <iostream> // temporaire
 
-Grid::Grid()
+Grid::Grid() : fall_timer(0),
+			   move_timer(0),
+			   tetroSet(false),
+			   rPressed(false),
+			   spacePressed(false),
+			   cPressed(false),
+			   nb_selected_tetros(0),
+			   can_use_hold(true),
+			   tetros_in_hold(EMPTY)
 {
-    this->textures[0].loadFromFile("textures/caseI.png");
-    this->textures[1].loadFromFile("textures/caseJ.png");
-    this->textures[2].loadFromFile("textures/caseL.png");
-    this->textures[3].loadFromFile("textures/caseZ.png");
-    this->textures[4].loadFromFile("textures/caseT.png");
-    this->textures[5].loadFromFile("textures/caseS.png");
-    this->textures[6].loadFromFile("textures/caseO.png");
-    this->textures[7].loadFromFile("textures/grid.png");
+	for (char i = 0; i < GRID_WIDTH; i++) for (char j = 0; j < GRID_HEIGHT; j++) this->grid[i][j] = EMPTY;
 
-    this->reset();
+	for (unsigned char i = 0; i < this->tetros_selected.size(); i++) this->tetros_selected[i] = EMPTY;
+
+	for (unsigned char i = 0; i < this->tetros_to_come.size(); i++) this->tetros_to_come[i] = this->get_random_tetromino();
+
+	this->colours[I_SHAPE] = sf::Color(0, 240, 240);
+	this->colours[J_SHAPE] = sf::Color(0, 0, 240);
+	this->colours[L_SHAPE] = sf::Color(240, 160, 0);
+	this->colours[Z_SHAPE] = sf::Color(240, 0, 0);
+	this->colours[T_SHAPE] = sf::Color(160, 0, 240);
+	this->colours[S_SHAPE] = sf::Color(0, 240, 0);
+	this->colours[O_SHAPE] = sf::Color(240, 240, 0);
+	this->colours[GHOST]   = sf::Color(216, 223, 227);
+	this->colours[EMPTY]   = sf::Color(60, 60, 60);
 }
 
-/*--------------------------------------------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------------------------------------*/
 
-bool Grid::initialize_tetromino()
+void Grid::manage_events(sf::RenderWindow& window)
 {
-    // Définit le nouveau tetromino à la position 0
-    this->current_position = 0;
+	if (!this->tetroSet) this->set_tetromino(false);
 
-    // Décale tous les tetromino vers le début
-    for (char i = 0; i < 6; i++)
-    {
-        this->current_tetrominos[i] = current_tetrominos[i+1];
-    }
-    
-    // Regenère le dernier tetromino
-    unsigned seed = std::chrono::steady_clock::now().time_since_epoch().count();
-    std::default_random_engine engine(seed);
-    std::uniform_int_distribution<char> distribution(0, 6);
-    this->current_tetrominos[6] = distribution(engine);
+	// fall_timer for the tetromino
+	if (this->fall_timer == 0)
+	{
+		this->fall_timer = 1;
 
-    // Charge le tetromino
-    for (char i = 0; i < 4; i++)
-    {
-        for (char j = 0; j < 4; j++)
-        {
-            this->tetromino.matrice[i][j] = this->tetromino.tetrominos[current_tetrominos[0]][0][i][j];
-        }
-    }
+		if (this->check_next_pos(this->m_hitablePoints, 0, 1)) this->move_next_pos(this->m_hitablePoints, 0, 1);
+		else this->landing();
+	}
+	else this->fall_timer = (1 + this->fall_timer) % 16;
 
-    // Le précédent tetromino est posé et on en crée un nouveau que l'on place en haut au milieu
-    this->tetromino.position_x = 3;
-    this->tetromino.position_y = 0;
+	if (this->move_timer == 0)
+	{
+		// Move the tetromino to the left
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && this->check_next_pos(this->m_hitablePoints, -1, 0))
+			this->move_next_pos(this->m_hitablePoints, -1, 0);
+		// Move the tetromino to the right
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && this->check_next_pos(this->m_hitablePoints, 1, 0))
+			this->move_next_pos(this->m_hitablePoints, 1, 0);
 
-    // Permet d'afficher le tetromino à la bonne ligne
-    for (char i = 0; i < 4; i++) // Parcourt la matrice composant le tetromino
-    {
-        bool filledLine = false; // Permet de savoir si la ligne possède un morceau de tetromino
+		this->move_timer = 1;
+	}
+	else this->move_timer = (1 + this->move_timer) % 5;
 
-        for (char j = 0; j < 4; j++)
-        {
-            if(tetromino.matrice[i][j] == 2)
-            {
-                filledLine = true;
-            }
-        }
+	if (keyPressed(this->rPressed, sf::Keyboard::isKeyPressed(sf::Keyboard::Up))) this->rotate();
 
-        if(filledLine)
-        {
-            break;
-        }
+	if (keyPressed(this->spacePressed, sf::Keyboard::isKeyPressed(sf::Keyboard::Space)))
+	{
+		this->replace_cases(this->posToDelete, CURRENT_BLOCK, EMPTY);
+		this->m_hitablePoints = this->get_ghost_pos();
+		this->actualize_tetr_position();
+		this->landing();
+	}
 
-        else //Si la ligne est vide
-        {
-            this->tetromino.position_y--;
-        }
-    }
+	if (keyPressed(this->cPressed, sf::Keyboard::isKeyPressed(sf::Keyboard::C) && can_use_hold)) this->use_hold();
 
-    // Vérifie si game_over ou non
-    for (char i = 0; i < 4; i++)
-    {
-        for (char j = 0; j < 4; j++)
-        {
-            if(this->matrice[this->tetromino.position_y+i][this->tetromino.position_x+j] == 1 && tetromino.matrice[i][j] == 2)
-            {
-                return false;
-            }
-        }
-    }
-
-    // Permet d'autoriser les mouvements horizontaux
-    this->horizontal_move = true;
-
-    // Permet d'autoriser la rotation
-    this->rotation_enabled = true;
-
-    return true;
+	this->display(window);
 }
 
-/*--------------------------------------------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------------------------------------*/
 
-void Grid::display_grid(sf::RenderWindow &window) 
+void Grid::replace_cases(std::array<sf::Vector2i, 4>& positions, char casetype_to_replace, char replacing_case)
 {
-    // Crée des rectangles pour cacher le fond dans la grille
-    sf::RectangleShape rectangles;
-    for (char i = 0; i < 20; i++)
-    {
-        rectangles.setSize(sf::Vector2f(CASE_SIZE*10, CASE_SIZE));
-        rectangles.setFillColor(sf::Color::Black);
-    }
-    
-
-    for (char i = 0; i < 20; i++)
-    {
-        rectangles.setPosition((window.getSize().x/2 - CASE_SIZE*5), (window.getSize().y/2 - CASE_SIZE*10)+i*CASE_SIZE);
-        window.draw(rectangles);
-
-        for (char j = 0; j < 10; j++)
-        {
-            if(matrice[i][j] == 2)
-            {
-                this->displayed_textures[i][j] = this->textures[current_tetrominos[0]];
-            }
-
-            this->cases.setPosition(GRID_CASE_POSITION_X, GRID_CASE_POSITION_Y);
-            this->cases.setTexture(this->displayed_textures[i][j]);
-            window.draw(cases);
-        }
-    }
-
-    display_tetromino();
+	for (char i = 0; i < positions.size(); i++)
+		if (this->grid[positions[i].y][positions[i].x] == casetype_to_replace)  this->grid[positions[i].y][positions[i].x] = replacing_case;
 }
 
-/*--------------------------------------------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------------------------------------*/
 
-void Grid::display_tetromino() 
+void Grid::actualize_tetr_position()
 {
-    // Boucle permettant de positionner le tetromino au bon endroit dans la grille
-    for (char i = 0; i < 4; i++)
-    {
-        for (char j = 0; j < 4; j++)
-        {
-            if(this->tetromino.matrice[i][j] == 2) 
-            {
-                this->matrice[tetromino.position_y + i][this->tetromino.position_x + j] = this->tetromino.matrice[i][j];
-            }
-        }
-    }
+	// Empty the actual ghost
+	this->replace_cases(this->ghost, GHOST, EMPTY);
+
+	// Create the new ghost at the new position
+	this->ghost = this->get_ghost_pos();
+	this->replace_cases(this->ghost, EMPTY, GHOST);
+
+	// Move the current tetromino to the good position
+	for (char i = 0; i < 4; i++) this->grid[this->m_hitablePoints[i].y][this->m_hitablePoints[i].x] = CURRENT_BLOCK;
+
+	this->posToDelete = this->m_hitablePoints;
 }
 
-/*--------------------------------------------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------------------------------------*/
 
-void Grid::move_tetromino_left() 
+char Grid::get_random_tetromino()
 {
-    if(this->check_left() && this->horizontal_move)
-    {
-        this->horizontal_move = false;
-        
-        for (char i = 0; i < 4; i++)
-        {
-            for (char j = 0; j < 4; j++)
-            {
-                if (this->tetromino.matrice[i][j] == 2)
-                {
-                    // Bouge le tetromino et les textures
-                    this->matrice[this->tetromino.position_y+i][this->tetromino.position_x+j-1] = 2;
-                    this->displayed_textures[this->tetromino.position_y+i][this->tetromino.position_x+j-1] = this->textures[this->current_tetrominos[0]];
+	char random_tetr;
+	bool present = true;
 
-                    this->matrice[this->tetromino.position_y+i][this->tetromino.position_x+j] = 0;
-                    this->displayed_textures[this->tetromino.position_y+i][this->tetromino.position_x+j] = this->textures[7];
-                }
-            }
-        }
+	std::random_device rd;
+	std::default_random_engine eng(rd());
+	std::uniform_int_distribution<short> distr(0, 6);
 
-        this->tetromino.position_x--;
+	if (this->nb_selected_tetros == this->tetros_selected.size())
+	{
+		for (unsigned char i = 0; i < this->tetros_selected.size(); i++) this->tetros_selected[i] = EMPTY;
 
-        this->horizontal_move = true;
-    }
+		this->nb_selected_tetros = 0;
+	}
+
+	while (present)
+	{
+		present = false;
+		random_tetr = distr(eng);
+
+		unsigned char i = 0;
+
+		while (i < this->tetros_selected.size() && !present)
+		{
+			if (this->tetros_selected[i] == random_tetr) present = true;
+			i++;
+		}
+	}
+
+	this->tetros_selected[this->nb_selected_tetros] = random_tetr;
+	this->nb_selected_tetros++;
+
+	return random_tetr;
 }
 
-/*--------------------------------------------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------------------------------------*/
 
-bool Grid::check_left()
+void Grid::display(sf::RenderWindow& window)
 {
-    for (char i = 0; i < 4; i++)
-    {
-        for (char j = 0; j < 4; j++)
-        {
-            if(this->matrice[this->tetromino.position_y+i][this->tetromino.position_x+j] == 2 && (this->matrice[this->tetromino.position_y+i][this->tetromino.position_x+j-1] == 1 || this->tetromino.position_x+j-1 < 0))
-            {
-                return false;
-            }
-        }
-    }
+	sf::RectangleShape cell(sf::Vector2f(CASE_SIZE - 5, CASE_SIZE - 5));
 
-    return true;
+	// Display the grid
+	for (char i = 0; i < GRID_WIDTH; i++)
+	{
+		for (char j = 0; j < GRID_HEIGHT; j++)
+		{
+			cell.setPosition(j * CASE_SIZE, i * CASE_SIZE);
+
+			if (this->grid[i][j] == EMPTY)				cell.setFillColor(this->colours[EMPTY]);
+			else if (this->grid[i][j] == CURRENT_BLOCK) cell.setFillColor(this->colours[this->tetros_to_come[0]]);
+			else if (this->grid[i][j] == GHOST)			cell.setFillColor(this->colours[GHOST]);
+			else										cell.setFillColor(this->colours[this->grid[i][j]]);
+
+			window.draw(cell);
+		}
+	}
+
+	cell.setSize(sf::Vector2f(NEXT - 2, NEXT - 2));
+
+	// Display the tetrominos to come
+	for (unsigned char k = 1; k < 7; k++) // For each tetrominos to come 
+	{
+		sf::Vector2i corner(3, 0);
+		if (this->tetros_to_come[k] == I_SHAPE) corner = sf::Vector2i(3, -1);
+
+		// Create the matrix corresponding to the k tetromino to come
+		std::vector<std::vector<char>> matrix_tetr_to_come = pos_to_matrix(set_positions(this->tetros_to_come[k]), this->tetros_to_come[k], corner);
+
+		display_matrix
+		(
+			window, 
+			matrix_tetr_to_come, 
+			TETR_TO_COME_X, 
+			TETR_TO_COME_Y + 3 * k * NEXT, 
+			cell, 
+			this->colours[this->tetros_to_come[k]],
+			CURRENT_BLOCK
+		);
+	}
+
+	// Display the holding place
+	if (this->tetros_in_hold != EMPTY)
+	{
+		sf::Vector2i corner(3, 0);
+		if (this->tetros_in_hold == I_SHAPE) corner = sf::Vector2i(3, -1);
+
+		std::vector<std::vector<char>> matrix_held_tetr = pos_to_matrix(set_positions(this->tetros_in_hold), this->tetros_in_hold, corner);
+
+		display_matrix
+		(
+			window, 
+			matrix_held_tetr, 
+			HOLDING_PLACE_X, 
+			HOLDING_PLACE_Y, 
+			cell, 
+			this->colours[this->tetros_in_hold], 
+			CURRENT_BLOCK
+		);
+	}
 }
 
-/*--------------------------------------------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------------------------------------*/
 
-void Grid::move_tetromino_right()
+void Grid::set_tetromino(bool for_hold)
 {
-    if(this->check_right() && this->horizontal_move)
-    {
-        // On empêche le mouvement horizontal afin d'éviter que plusieurs déplacements se fassent simultanément
-        this->horizontal_move = false;
+	if (!for_hold) for (unsigned char i = 0; i < this->tetros_to_come.size() - 1; i++) this->tetros_to_come[i] = this->tetros_to_come[i + 1];
 
-        
-        for (char i = 3; i >= 0; i--)
-        {
-            for (char j = 3; j >= 0; j--)
-            {
-                if (this->tetromino.matrice[i][j] == 2)
-                {
-                    // Bouge le tetromino ainsi que ses textures
-                    this->matrice[this->tetromino.position_y+i][this->tetromino.position_x+j+1] = 2;
-                    this->displayed_textures[this->tetromino.position_y+i][this->tetromino.position_x+j+1] = this->textures[this->current_tetrominos[0]];
+	this->tetros_to_come[this->tetros_to_come.size() - 1] = get_random_tetromino();
 
-                    this->matrice[this->tetromino.position_y+i][this->tetromino.position_x+j] = 0;
-                    this->displayed_textures[this->tetromino.position_y+i][this->tetromino.position_x+j] = this->textures[7];
-                }
-            }
-        }
+	this->m_hitablePoints = this->set_positions(this->tetros_to_come[0]);
 
-        this->tetromino.position_x ++;
+	this->posToDelete = this->m_hitablePoints;
 
-        // Et on autorise le mouvement horizontal
-        this->horizontal_move = true;
-    }
+	this->leftHandCorner = sf::Vector2i(3, 0);
+
+	if (this->tetros_to_come[0] == I_SHAPE) this->leftHandCorner = sf::Vector2i(3, -1);
+
+	this->set_matrix();
+
+	this->tetroSet = true;
 }
 
-/*--------------------------------------------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------------------------------------*/
 
-bool Grid::check_right()
+void Grid::set_matrix()
 {
-    for (char i = 0; i < 4; i++)
-    {
-        for (char j = 0; j < 4; j++)
-        {
-            if(this->matrice[this->tetromino.position_y+i][this->tetromino.position_x+j] == 2 && (this->matrice[this->tetromino.position_y+i][this->tetromino.position_x+j+1] == 1 || this->tetromino.position_x+j+1 > 9))
-            {
-                return false;
-            }
-        }
-    }
+	char size = this->current_tetros_matrix.size();
 
-    return true;
+	// Reset the actual tetrmino matrix
+	for (char i = size - 1; i >= 0; i--)
+	{
+		for (char j = 0; j < size; j++) this->current_tetros_matrix[i].pop_back();
+
+		this->current_tetros_matrix.pop_back();
+	}
+
+	this->current_tetros_matrix = this->pos_to_matrix(this->m_hitablePoints, this->tetros_to_come[0], this->leftHandCorner);
 }
 
-/*--------------------------------------------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------------------------------------*/
 
-bool Grid::fall_tetromino()
+std::array<sf::Vector2i, 4> Grid::set_positions(char shape)
 {
-    // Si il n'y a pas de tetromino ni le sol en dessous
-    if(this->check_fall())
-    {
-        // On déplace le tetromino d'une case vers le bas
-        for (char i = 3; i >= 0; i--)
-        {
-            for (char j = 3; j >= 0; j--)
-            {
-                if(this->tetromino.matrice[i][j] == 2)
-                {
-                    // Bouge le tetromino ainsi que les textures
-                    this->matrice[this->tetromino.position_y+i+1][this->tetromino.position_x+j] = 2;
-                    this->displayed_textures[this->tetromino.position_y+i+1][this->tetromino.position_x+j] = this->textures[this->current_tetrominos[0]];
+	switch (shape)
+	{
+	case I_SHAPE:
+		return { sf::Vector2i(3,0), sf::Vector2i(4,0), sf::Vector2i(5,0), sf::Vector2i(6,0) };
 
-                    this->matrice[this->tetromino.position_y+i][this->tetromino.position_x+j] = 0;
-                    this->displayed_textures[this->tetromino.position_y+i][this->tetromino.position_x+j] = this->textures[7];
-                }
-            }
-        }
+	case J_SHAPE:
+		return { sf::Vector2i(3,0), sf::Vector2i(3,1), sf::Vector2i(4,1), sf::Vector2i(5,1) };
 
-        this->tetromino.position_y++;
-    }
+	case L_SHAPE:
+		return { sf::Vector2i(5,0), sf::Vector2i(3,1), sf::Vector2i(4,1), sf::Vector2i(5,1) };
 
-    else
-    {
-        // Permet au tetromino d'atterrir et de ne plus être celui contrôlé par le joueur
-        this->landing();
+	case Z_SHAPE:
+		return { sf::Vector2i(3,0), sf::Vector2i(4,0), sf::Vector2i(4,1), sf::Vector2i(5,1) };
 
-        // On supprime les lignes pleines s'il y en a
-        this->clear_lines();
+	case T_SHAPE:
+		return { sf::Vector2i(4,0), sf::Vector2i(3,1), sf::Vector2i(4,1), sf::Vector2i(5,1) };
 
-        // Et on permet à un nouveau tetromino d'apparaître
-        return this->initialize_tetromino();
-    }
+	case S_SHAPE:
+		return { sf::Vector2i(4,0), sf::Vector2i(5,0), sf::Vector2i(3,1), sf::Vector2i(4,1) };
 
-    return true;
+	case O_SHAPE:
+		return { sf::Vector2i(4,0), sf::Vector2i(5,0), sf::Vector2i(4,1), sf::Vector2i(5,1) };
+	}
 }
 
-/*--------------------------------------------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------------------------------------*/
 
-bool Grid::check_fall()
+bool Grid::check_next_pos(std::array<sf::Vector2i, 4> coordinates, char x, char y)
 {
-    for (char i = 0; i < 4; i++)
-    {
-        for (char j = 0; j < 4; j++)
-        {
-            if(this->matrice[this->tetromino.position_y+i][this->tetromino.position_x+j] == 2 && (this->matrice[this->tetromino.position_y+i+1][this->tetromino.position_x+j] == 1 || this->tetromino.position_y+i+1 > 19))
-            {
-                return false;
-            }
-        }
-    }
+	for (unsigned char i = 0; i < 4; i++)
+	{
+		coordinates[i].x += x;
+		coordinates[i].y += y;
+	}
 
-    return true;
+	return check_set_pos(coordinates);
 }
 
-/*--------------------------------------------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------------------------------------*/
 
-void Grid::landing()
+void Grid::move_next_pos(std::array<sf::Vector2i, 4>& coordinates, char x, char y)
 {
-    // Permet un petit délai avnat l'atterrissage
-    int time(0), speed(16);
-    bool ok(false);
+	this->replace_cases(this->posToDelete, CURRENT_BLOCK, EMPTY);
 
-    if(time == 0)
-    {
-        time = 1;
-        ok = true;
-    }
+	for (char i = 0; i < 4; i++)
+	{
+		coordinates[i].x += x;
+		coordinates[i].y += y;
+	}
 
-    else
-    {
-        time = (1 + time) % speed;
-    }
+	this->actualize_tetr_position();
 
-    if(ok)
-    {
-        // Empêche la rotation du tetromino pour empêcher les bugs
-        this->rotation_enabled = false;
-
-        // On empêche le mouvement du tetromino le temps de l'atterrissage afin d'empêcher les bugs
-        this->horizontal_move = false;
-
-        for (char i = 0; i < 20; i++)
-        {
-            for (char j = 0; j < 10; j++)
-            {
-                if(this->matrice[i][j] == 2)
-                {
-                    this->matrice[i][j] = 1;
-                }
-            }
-        }
-    }
+	if (coordinates == this->m_hitablePoints)
+	{
+		this->leftHandCorner.x += x;
+		this->leftHandCorner.y += y;
+	}
 }
 
-/*--------------------------------------------------------------------------------------------------------------*/
-
-void Grid::clear_lines()
-{
-    // Boucle regardant chaque ligne
-    for (char i = 0; i < 20; i++)
-    {
-        bool filled_line(true);
-
-        // Boucle regardant chaque colonne de la ligne sélectionnée
-        char j=0;
-        while(j<10 && filled_line)
-        {
-            if (this->matrice[i][j] == 0)
-            {
-                filled_line = false;
-            }
-
-            j++;
-        }
-
-        // Si la ligne est à supprimer
-        if(filled_line)
-        {
-            this->score += 100;
-
-            // Supprime la ligne
-            for (char j = 0; j < 10; j++)
-            {
-                this->matrice[i][j] = 0;
-                this->displayed_textures[i][j] = this->textures[7];
-            }
-
-            // Décale vers le bas les lignes du dessus
-            for (char j = i; j > 0; j--)
-            {
-                for (char k = 0; k < 10; k++)
-                {
-                    this->matrice[j][k] = this->matrice[j-1][k];
-                    this->displayed_textures[j][k] = this->displayed_textures[j-1][k];
-                }
-            }
-        }
-    }
-}
-
-/*--------------------------------------------------------------------------------------------------------------*/
-
-void Grid::rotate(char side)
-{
-    if(this->check_rotate() && this->current_tetrominos[0]!=6 && this->rotation_enabled)
-    {
-        this->horizontal_move = false;
-
-        // Si la rotation doit s'effectuer à droite
-        if(side == 'R')
-        {
-            // Modifie la position
-            if(this->current_position < 3)
-            {
-                this->current_position++;
-            }
-
-            else 
-            {
-                this->current_position = 0;
-            }
-        }
-
-        // Si la rotation doit s'effectuer à gauche
-        else if(side == 'L')
-        {
-            // Modifie la position
-            if(this->current_position > 0)
-            {
-                this->current_position--;
-            }
-
-            else 
-            {
-                this->current_position = 3;
-            }
-        }
-
-        // Réinitialise le tetromino
-        for (char i = 0; i < 4; i++)
-        {
-            for (char j = 0; j < 4; j++)
-            {
-                if(this->matrice[this->tetromino.position_y+i][this->tetromino.position_x+j] == 2)
-                {
-                    this->matrice[this->tetromino.position_y+i][this->tetromino.position_x+j] = 0;
-                    this->displayed_textures[this->tetromino.position_y+i][this->tetromino.position_x+j] = this->textures[7];
-                }
-
-                this->tetromino.matrice[i][j] = this->tetromino.tetrominos[this->current_tetrominos[0]][this->current_position][i][j];
-            }   
-        }
-
-        // Le remplace avec le nouveau
-        for (char i = 0; i < 4; i++)
-        {
-            for (char j = 0; j < 4; j++)
-            {
-                if (this->tetromino.matrice[i][j] == 2)
-                {
-                    this->matrice[this->tetromino.position_y+i][this->tetromino.position_x+j] = 2;
-                    this->displayed_textures[this->tetromino.position_y+i][this->tetromino.position_x+j] = this->textures[this->current_tetrominos[0]];
-                }
-            }
-        }
-
-        this->horizontal_move = true;
-    }
-}
-
-/*--------------------------------------------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------------------------------------*/
 
 bool Grid::check_rotate()
 {
-    int nextPosition;
-    if(this->current_position == 3)
-        nextPosition = 0;
-    else
-        nextPosition = this->current_position + 1;
+	if (this->tetros_to_come[0] == O_SHAPE) return false;
 
-    bool rotate = true;
+	bool can_rotate = true;
 
-    for (char i = 0; i < 4; i++)
-    {
-        for (char j = 0; j < 4; j++)
-        {
-            if(this->tetromino.tetrominos[this->current_tetrominos[0]][nextPosition][i][j] == 2)
-            {
-                if(this->matrice[this->tetromino.position_y+i][this->tetromino.position_x+j] == 1 || 
-                  (this->tetromino.position_x+j < 0) || 
-                  (this->tetromino.position_x+j > 9) || 
-                  (this->tetromino.position_y+i > 19) || 
-                  (this->tetromino.position_y+i < 0))
-                {
-                    rotate = false;
-                }
-            }
-        }
-    }
-    std::cout << "sans wallkick : " << rotate << std::endl;
+	std::vector<std::vector<char>> test_matrix = rotate_matrix(this->current_tetros_matrix, 'R');
 
-    if(!rotate)
-        rotate = this->wallKick();
+	unsigned char i = 0;
 
-    return rotate;
+	std::array<sf::Vector2i, 4> positions = this->matrix_to_pos(test_matrix);
+
+	can_rotate = this->check_set_pos(this->matrix_to_pos(test_matrix));
+
+	if (!can_rotate) can_rotate = this->wall_kick(test_matrix);
+
+	return can_rotate;
 }
 
-/*--------------------------------------------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------------------------------------*/
 
-bool Grid::wallKick()
+void Grid::rotate()
 {
-    bool wallKick = true;
-    bool iShape = false;
-    int nextPosition;
-    if(this->current_position == 3)
-        nextPosition = 0;
-    else
-        nextPosition = this->current_position + 1;
-    int gap = 0;
+	if (this->check_rotate())
+	{
+		this->replace_cases(this->posToDelete, CURRENT_BLOCK, EMPTY);
 
-    // WallKick de la droite vers la gauche
-    for(char i = 0; i < 4; i++)
-    {
-        for(char j = 0; j < 4; j++)
-        {
-            if(this->tetromino.tetrominos[this->current_tetrominos[0]][nextPosition][i][j] == 2)
-            {
-                if(this->matrice[this->tetromino.position_y+i][this->tetromino.position_x+j-1] == 1 ||
-                   this->tetromino.position_x+j-1 < 0)
-                {
-                    wallKick = false;
-                }
-            }
-        }
-    }
-    if(wallKick)
-    {
-        this->move_tetromino_left();
-        return true;
-    }
+		char k = 0;
 
+		this->current_tetros_matrix = rotate_matrix(this->current_tetros_matrix, 'R');
+		this->m_hitablePoints = this->matrix_to_pos(this->current_tetros_matrix);
 
-    // Wallkick de la gauche vers la droite
-    wallKick = true;
-    gap = 0;
-    for(char i = 0; i < 4; i++)
-    {
-        for(char j = 0; j < 4; j++)
-        {
-            if(this->tetromino.tetrominos[this->current_tetrominos[0]][nextPosition][i][j] == 2)
-            {
-                std::cout << "Position actuelle : " << (int)this->tetromino.position_x << std::endl;
-                if(this->current_tetrominos[0] == 0 && this->tetromino.position_x == -2)
-                {
-                    iShape = true;
-
-                    if(this->matrice[this->tetromino.position_y+i][this->tetromino.position_x+j+2] == 1 ||
-                       this->tetromino.position_x+j+2 > 19)
-                    {
-                        wallKick = false;
-                    }
-                }
-
-                else if(this->matrice[this->tetromino.position_y+i][this->tetromino.position_x+j+1] == 1 ||
-                   this->tetromino.position_x+j+1 > 19)
-                {
-                    wallKick = false;
-                }
-            }
-        }
-    }
-    if(wallKick)
-    {
-        this->move_tetromino_right();
-        if(iShape)
-            this->move_tetromino_right();
-        return true;
-    }
-
-    return wallKick;
+		this->actualize_tetr_position();
+	}
 }
 
-/*--------------------------------------------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------------------------------------*/
 
-void Grid::go_down()
+bool Grid::wall_kick(std::vector<std::vector<char>> test_matrix)
 {
-    this->horizontal_move = false;
+	std::array<sf::Vector2i, 4> positions = this->matrix_to_pos(test_matrix);
 
-    while(this->check_fall())
-    {
-        this->fall_tetromino();
-    }
+	if (this->check_next_pos(positions, 1, 0))
+	{
+		// Move the artificials positions on the right
+		this->move_next_pos(positions, 1, 0);
 
-    this->landing();
-    this->clear_lines();
-    this->initialize_tetromino();
+		this->leftHandCorner.x++;
+
+		this->m_hitablePoints = positions;
+
+		return true;
+	}
+
+	// The same thing for the left
+	else if (this->check_next_pos(positions, -1, 0))
+	{
+		this->move_next_pos(positions, -1, 0);
+
+		this->leftHandCorner.x--;
+
+		this->m_hitablePoints = positions;
+
+		return true;
+	}
+
+	// If a single move right or left is not enough
+	else if (this->tetros_to_come[0] == I_SHAPE)
+	{
+		// Check for the right movement
+		this->move_next_pos(positions, 2, 0);
+
+		if (this->check_set_pos(positions))
+		{
+			this->posToDelete = this->m_hitablePoints;
+
+			this->move_next_pos(this->m_hitablePoints, 2, 0);
+
+			return true;
+		}
+
+		// Check for the left movement
+		this->move_next_pos(positions, -4, 0);
+
+		if (this->check_set_pos(positions))
+		{
+			this->posToDelete = this->m_hitablePoints;
+
+			this->move_next_pos(this->m_hitablePoints, -2, 0);
+
+			return true;
+		}
+	}
+
+	return false;
 }
 
-/*--------------------------------------------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------------------------------------*/
 
-void Grid::display_score(sf::RenderWindow &window, sf::Font font)
+void Grid::clear_lines()
 {
-    sf::Text text("SCORE : " + std::to_string(score), font, 50);
+	for (unsigned char i = 0; i < GRID_WIDTH; i++)
+	{
+		unsigned char j = 0;
+		bool filled_line = true;
 
-    text.setPosition(SCORE_POSITION_X, SCORE_POSITION_Y);
-    window.draw(text);
+		while (j < GRID_HEIGHT && filled_line)
+		{
+			if (this->grid[i][j] == EMPTY || this->grid[i][j] == GHOST) filled_line = false;
+
+			j++;
+		}
+
+		if (filled_line)
+		{
+			for (unsigned char j = 0; j < GRID_HEIGHT; j++) this->grid[i][j] = EMPTY;
+
+			for (unsigned char j = i; j > 0; j--) for (unsigned char k = 0; k < GRID_HEIGHT; k++) this->grid[j][k] = this->grid[j - 1][k];
+		}
+	}
 }
 
-/*--------------------------------------------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------------------------------------*/
 
-void Grid::display_tetr_to_come(sf::RenderWindow &window)
+void Grid::landing()
 {
-    sf::RectangleShape background_hider;
-    sf::Sprite sprite[4][4];
+	for (char i = 0; i < m_hitablePoints.size(); i++)
+		this->grid[this->m_hitablePoints[i].y][this->m_hitablePoints[i].x] = this->tetros_to_come[0];
 
-    for (char k = 1; k < 6; k++)
-    {
-        for (char i = 0; i < 4; i++)
-        {
-            background_hider.setSize(sf::Vector2f(CASE_SIZE,CASE_SIZE));
-            background_hider.setFillColor(sf::Color::Black);
+	this->tetroSet = false;
 
-            for (char j = 0; j < 4; j++)
-            {
-                if(this->tetromino.tetrominos[this->current_tetrominos[k]][0][i][j] == 2)
-                {
-                    background_hider.setPosition(TETR_TO_COME_X+CASE_SIZE*j, (3*k*CASE_SIZE) + (TETR_TO_COME_Y+CASE_SIZE*i));
-                    window.draw(background_hider);
+	this->clear_lines();
 
-                    sprite[i][j].setPosition(TETR_TO_COME_X+CASE_SIZE*j, (3*k*CASE_SIZE) + (TETR_TO_COME_Y+CASE_SIZE*i));
-                    sprite[i][j].setTexture(this->textures[this->current_tetrominos[k]]);
-                    window.draw(sprite[i][j]);
-                }
-            }
-        }
-    }
+	if (!this->can_use_hold) can_use_hold = true;
 }
 
-/*--------------------------------------------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------------------------------------*/
 
-void Grid::manage_hold(sf::RenderWindow &window)
+bool Grid::check_set_pos(std::array<sf::Vector2i, 4> positions)
 {
+	for (unsigned char i = 0; i < positions.size(); i++)
+	{
+		if (positions[i].x < 0 || positions[i].x > 9 ||
+			positions[i].y < 0 || positions[i].y > 19 ||
+			(this->grid[positions[i].y][positions[i].x] >= I_SHAPE && this->grid[positions[i].y][positions[i].x] <= O_SHAPE))
+			return false;
+	}
 
+	return true;
 }
 
-/*--------------------------------------------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------------------------------------*/
 
-void Grid::reset()
+void Grid::use_hold()
 {
-    this->horizontal_move = false;
-    this->rotation_enabled = false;
-    this->score = 0;
+	this->replace_cases(this->m_hitablePoints, CURRENT_BLOCK, EMPTY);
+	this->replace_cases(this->ghost, GHOST, EMPTY);
 
-    for (char i = 0; i < 20; i++)
-    {
-        for (char j = 0; j < 10; j++)
-        {
-            this->matrice[i][j] = 0;
-            this->displayed_textures[i][j] = this->textures[7];
-        }
-    }
+	if (this->tetros_in_hold == EMPTY)
+	{
+		this->tetros_in_hold = this->tetros_to_come[0];
+		this->set_tetromino(false);
+	}
+	else
+	{
+		char temp = this->tetros_to_come[0];
+		this->tetros_to_come[0] = this->tetros_in_hold;
+		this->tetros_in_hold = temp;
+		this->set_tetromino(true);
+	}
 
-    for (char i = 0; i < 6; i++)
-    {
-        // Choisit un nombre aléatoire
-        unsigned seed = std::chrono::steady_clock::now().time_since_epoch().count();
-        std::default_random_engine engine(seed + 3*i);
-        std::uniform_int_distribution<char> distribution(0, 6);
-        int randomNb = distribution(engine);
-
-        // Modifie le nombre aléatoire si le tetromino correspondant est géjà généré
-        for (char j = 0; j < i; j++)
-        {
-            if(randomNb == this->current_tetrominos[j])
-            {
-                if(randomNb == 6)
-                    randomNb = 0;
-                else
-                    randomNb++;
-            }
-        }
-        this->current_tetrominos[i] = randomNb;
-    }
-
-    this->initialize_tetromino();
+	this->can_use_hold = false;
 }
+
+/*--------------------------------------------------------------------------------------------------------*/
+
+std::array<sf::Vector2i, 4> Grid::matrix_to_pos(std::vector<std::vector<char>> matrix)
+{
+	unsigned char k = 0;
+	std::array<sf::Vector2i, 4> pos;
+
+	for (unsigned char i = 0; i < matrix.size(); i++)
+	{
+		for (unsigned char j = 0; j < matrix[0].size(); j++)
+		{
+			if (matrix[i][j] == CURRENT_BLOCK)
+			{
+				pos[k].x = j + this->leftHandCorner.x;
+				pos[k].y = i + this->leftHandCorner.y;
+
+				k++;
+			}
+		}
+	}
+
+	return pos;
+}
+
+/*--------------------------------------------------------------------------------------------------------*/
+
+std::vector<std::vector<char>> Grid::pos_to_matrix(std::array<sf::Vector2i, 4> pos, char shape, sf::Vector2i corner)
+{
+	std::vector<std::vector<char>> matrix;
+
+	char size = 3;
+
+	if (shape == I_SHAPE) size = 4;
+
+	for (unsigned char i = 0; i < size; i++)
+	{
+		std::vector<char> matrix_line;
+
+		for (unsigned char j = 0; j < size; j++) matrix_line.push_back(0);
+
+		matrix.push_back(matrix_line);
+	}
+
+	for (unsigned char i = 0; i < 4; i++) matrix[pos[i].y - corner.y][pos[i].x - corner.x] = CURRENT_BLOCK;
+
+	return matrix;
+}
+
+/*--------------------------------------------------------------------------------------------------------*/
+
+std::array<sf::Vector2i, 4> Grid::get_ghost_pos()
+{
+	std::array<sf::Vector2i, 4> positions = this->m_hitablePoints;
+
+	while (this->check_next_pos(positions, 0, 1)) for (unsigned char i = 0; i < 4; i++) positions[i].y++;
+
+	return positions;
+}
+
+/*--------------------------------------------------------------------------------------------------------*/

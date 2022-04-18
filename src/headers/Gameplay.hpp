@@ -26,6 +26,5 @@ class Gameplay
         int time, move_timer, level, scoreComparison;
         float speed;
         Grid grid;
-        sf::Music music;
-        bool music_launched, incrementLevel;
+        bool incrementLevel;
 };

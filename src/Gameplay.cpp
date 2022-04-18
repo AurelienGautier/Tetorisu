@@ -5,7 +5,6 @@
 Gameplay::Gameplay()
 {
     this->reset();
-    this->music.openFromFile("sounds/cityRuins.wav");
 }
 
 /*--------------------------------------------------------------------------------------------------------------*/
@@ -16,12 +15,6 @@ void Gameplay::display(sf::RenderWindow &window, currentGameState &state)
     if(!window.hasFocus())        
     {
         state.state = PAUSE;
-    }
-
-    if(!music_launched)
-    {
-        this->music.play();
-        music_launched = true;
     }
 
     if(keyPressed(this->escapePressed, sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)))
@@ -170,7 +163,6 @@ void Gameplay::reset()
     this->level = 1;
     this->scoreComparison = 0;
     this->grid_initialized = false;
-    this->music_launched = false;
     this->incrementLevel = false;
 }
 

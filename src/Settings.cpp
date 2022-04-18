@@ -12,8 +12,7 @@ Settings::Settings(currentGameState &state)
     {
         resolutionFile >> state.windowWidth;
         resolutionFile >> state.windowHeight;
-    } 
-
+    }
     else 
     {
         std::cout << "Fichier des paramètres de l'écran inaccessible." << std::endl;

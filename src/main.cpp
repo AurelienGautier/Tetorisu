@@ -2,7 +2,7 @@
 #include "headers/global.hpp"
 #include "headers/TitleScreen.hpp"
 #include "headers/Settings.hpp"
-#include "headers/Gameplay.hpp"
+#include "headers/Grid.hpp"
 #include "headers/PauseScreen.hpp"
 #include "headers/GameOver.hpp"
 
@@ -21,12 +21,12 @@ int main()
     // Déclaration des objets composant le jeu
     TitleScreen titlescreen;
     Settings settings(state);
-    Gameplay gameplay;
     PauseScreen pausescreen(state);
+    Grid grid;
     GameOver gameover;
 
     // Création de la fenêtre et de la vue
-    sf::RenderWindow window(sf::VideoMode(state.windowWidth, state.windowHeight), "Tetorisu");
+    sf::RenderWindow window(sf::VideoMode(state.windowWidth, state.windowHeight), "Tetorisu", sf::Style::Titlebar | sf::Style::Close);
     sf::View view(sf::Vector2f(window.getSize().x/2, window.getSize().y/2), sf::Vector2f(state.windowWidth, state.windowHeight));
     window.setFramerateLimit(60);
 
@@ -34,8 +34,8 @@ int main()
     {
         // Vide la fenêtre et affiche l'arrrière-plan
         window.clear();
-        background.setPosition(0,0);
-        window.draw(background);
+        /*background.setPosition(0,0);
+        window.draw(background);*/
 
         // Gestion des différents écrans
         switch(state.state)
@@ -47,7 +47,7 @@ int main()
                 settings.display(window, state);
                 break;
             case PLAY:
-                gameplay.display(window, state);
+                grid.manage_events(window);
                 break;
             case PAUSE:
                 pausescreen.display(window, state);
