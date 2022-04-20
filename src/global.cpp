@@ -12,7 +12,6 @@ void displayingText(sf::RenderWindow &window, std::string textToDisplay, sf::Fon
 // Permet d'éviter les appuis maintenus
 bool keyPressed(bool &keyPressed, const bool keyPressedSF)
 {   
-    // Merci Loudrasiel :)
     if(keyPressed)
     {
         if(!keyPressedSF)
@@ -70,7 +69,8 @@ std::vector<std::vector<char>> rotate_matrix(std::vector<std::vector<char>> matr
 	{
 		for (int j = 0; j < matrix[0].size(); j++)
 		{
-			resultat[i][j] = positions[(matrix.size() - 1) * matrix.size() - matrix.size() * j + i];
+			if (side == 'R') resultat[i][j] = positions[(matrix.size() - 1) * matrix.size() - matrix.size() * j + i];
+			else resultat[i][j] = positions[(matrix.size() - 1) + matrix.size() * j - i];
 		}
 	}
 

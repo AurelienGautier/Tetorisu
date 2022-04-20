@@ -4,3 +4,4 @@
 3 UP
 4 LEFT
 5 RIGHT
+6 C

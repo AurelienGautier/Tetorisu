@@ -19,7 +19,6 @@ enum
 	CURRENT_BLOCK
 };
 
-
 class Grid
 {
 private:
@@ -32,16 +31,20 @@ private:
 	char move_timer;
 	bool tetroSet;
 	sf::Vector2i leftHandCorner;
-	bool rPressed;
-	bool spacePressed;
-	bool cPressed;
+	bool rightRotateKeyPressed;
+	bool leftRotateKeyPressed;
+	bool instantDescentKeyPressed;
+	bool holdKeyPressed;
+	bool pauseKeyPressed;
 	std::vector<std::vector<char>> current_tetros_matrix;
 	std::array<char, 7> tetros_to_come;
 	std::array<char, 7> tetros_selected;
 	char nb_selected_tetros;
 	bool can_use_hold;
 	char tetros_in_hold;
+	bool game_over;
 
+	void reset();
 	void replace_cases(std::array<sf::Vector2i, 4>& positions, char casetype_to_replace, char replacing_case);
 	void actualize_tetr_position();
 	char get_random_tetromino();
@@ -51,8 +54,8 @@ private:
 	std::array<sf::Vector2i, 4> set_positions(char shape);
 	bool check_next_pos(std::array<sf::Vector2i, 4> coordinates, char x, char y);
 	void move_next_pos(std::array<sf::Vector2i, 4>& coordinates, char x, char y);
-	bool check_rotate();
-	void rotate();
+	bool check_rotate(char side);
+	void rotate(char side);
 	bool wall_kick(std::vector<std::vector<char>> test_matrix);
 	void clear_lines();
 	void landing();
@@ -64,5 +67,5 @@ private:
 
 public:
 	Grid();
-	void manage_events(sf::RenderWindow& window);
+	void manage_events(sf::RenderWindow& window, currentGameState& state);
 };

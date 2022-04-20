@@ -2,21 +2,9 @@
 #include <random>
 #include <iostream> // temporaire
 
-Grid::Grid() : fall_timer(0),
-			   move_timer(0),
-			   tetroSet(false),
-			   rPressed(false),
-			   spacePressed(false),
-			   cPressed(false),
-			   nb_selected_tetros(0),
-			   can_use_hold(true),
-			   tetros_in_hold(EMPTY)
+Grid::Grid()
 {
-	for (char i = 0; i < GRID_WIDTH; i++) for (char j = 0; j < GRID_HEIGHT; j++) this->grid[i][j] = EMPTY;
-
-	for (unsigned char i = 0; i < this->tetros_selected.size(); i++) this->tetros_selected[i] = EMPTY;
-
-	for (unsigned char i = 0; i < this->tetros_to_come.size(); i++) this->tetros_to_come[i] = this->get_random_tetromino();
+	this->reset();
 
 	this->colours[I_SHAPE] = sf::Color(0, 240, 240);
 	this->colours[J_SHAPE] = sf::Color(0, 0, 240);
@@ -31,8 +19,36 @@ Grid::Grid() : fall_timer(0),
 
 /*--------------------------------------------------------------------------------------------------------*/
 
-void Grid::manage_events(sf::RenderWindow& window)
+void Grid::reset()
 {
+	this->fall_timer = 0;
+	this->move_timer = 0;
+	this->tetroSet = false;
+	this->rightRotateKeyPressed = false;
+	this->leftRotateKeyPressed = false;
+	this->instantDescentKeyPressed = false;
+	this->holdKeyPressed = false;
+	this->pauseKeyPressed = false;
+	this->nb_selected_tetros = 0;
+	this->can_use_hold = false;
+	this->tetros_in_hold = EMPTY;
+	this->game_over = false;
+
+	for (char i = 0; i < GRID_WIDTH; i++) for (char j = 0; j < GRID_HEIGHT; j++) this->grid[i][j] = EMPTY;
+
+	for (unsigned char i = 0; i < this->tetros_selected.size(); i++) this->tetros_selected[i] = EMPTY;
+
+	for (unsigned char i = 0; i < this->tetros_to_come.size(); i++) this->tetros_to_come[i] = this->get_random_tetromino();
+}
+
+/*--------------------------------------------------------------------------------------------------------*/
+
+void Grid::manage_events(sf::RenderWindow& window, currentGameState &state)
+{
+	if (this->game_over) state.state = GAME_OVER;
+
+	if (keyPressed(this->pauseKeyPressed, sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))) state.state = PAUSE;
+
 	if (!this->tetroSet) this->set_tetromino(false);
 
 	// fall_timer for the tetromino
@@ -48,19 +64,20 @@ void Grid::manage_events(sf::RenderWindow& window)
 	if (this->move_timer == 0)
 	{
 		// Move the tetromino to the left
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && this->check_next_pos(this->m_hitablePoints, -1, 0))
+		if (sf::Keyboard::isKeyPressed(state.controls[MOVE_LEFT]) && this->check_next_pos(this->m_hitablePoints, -1, 0))
 			this->move_next_pos(this->m_hitablePoints, -1, 0);
 		// Move the tetromino to the right
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && this->check_next_pos(this->m_hitablePoints, 1, 0))
+		else if (sf::Keyboard::isKeyPressed(state.controls[MOVE_RIGHT]) && this->check_next_pos(this->m_hitablePoints, 1, 0))
 			this->move_next_pos(this->m_hitablePoints, 1, 0);
 
 		this->move_timer = 1;
 	}
 	else this->move_timer = (1 + this->move_timer) % 5;
 
-	if (keyPressed(this->rPressed, sf::Keyboard::isKeyPressed(sf::Keyboard::Up))) this->rotate();
+	if (keyPressed(this->rightRotateKeyPressed, sf::Keyboard::isKeyPressed(state.controls[RIGHT_ROTATION]))) this->rotate('R');
+	else if (keyPressed(this->leftRotateKeyPressed, sf::Keyboard::isKeyPressed(state.controls[LEFT_ROTATION]))) this->rotate('L');
 
-	if (keyPressed(this->spacePressed, sf::Keyboard::isKeyPressed(sf::Keyboard::Space)))
+	if (keyPressed(this->instantDescentKeyPressed, sf::Keyboard::isKeyPressed(state.controls[INSTANT_DESCENT])))
 	{
 		this->replace_cases(this->posToDelete, CURRENT_BLOCK, EMPTY);
 		this->m_hitablePoints = this->get_ghost_pos();
@@ -68,7 +85,7 @@ void Grid::manage_events(sf::RenderWindow& window)
 		this->landing();
 	}
 
-	if (keyPressed(this->cPressed, sf::Keyboard::isKeyPressed(sf::Keyboard::C) && can_use_hold)) this->use_hold();
+	if (keyPressed(this->holdKeyPressed, sf::Keyboard::isKeyPressed(state.controls[HOLD]) && can_use_hold)) this->use_hold();
 
 	this->display(window);
 }
@@ -210,17 +227,32 @@ void Grid::set_tetromino(bool for_hold)
 
 	this->tetros_to_come[this->tetros_to_come.size() - 1] = get_random_tetromino();
 
-	this->m_hitablePoints = this->set_positions(this->tetros_to_come[0]);
+	std::array<sf::Vector2i, 4> positions = this->set_positions(this->tetros_to_come[0]);
 
-	this->posToDelete = this->m_hitablePoints;
+	for (unsigned char i = 0; i < 4; i++)
+	{
+		if (this->grid[positions[i].y][positions[i].x] >= I_SHAPE && this->grid[positions[i].y][positions[i].x] <= O_SHAPE)
+		{
+			this->game_over = true;
+		}
+	}
 
-	this->leftHandCorner = sf::Vector2i(3, 0);
+	if (!this->game_over)
+	{
+		this->m_hitablePoints = positions;
 
-	if (this->tetros_to_come[0] == I_SHAPE) this->leftHandCorner = sf::Vector2i(3, -1);
+		this->posToDelete = this->m_hitablePoints;
 
-	this->set_matrix();
+		this->leftHandCorner = sf::Vector2i(3, 0);
 
-	this->tetroSet = true;
+		if (this->tetros_to_come[0] == I_SHAPE) this->leftHandCorner = sf::Vector2i(3, -1);
+
+		this->set_matrix();
+
+		this->actualize_tetr_position();
+
+		this->tetroSet = true;
+	}
 }
 
 /*--------------------------------------------------------------------------------------------------------*/
@@ -244,6 +276,8 @@ void Grid::set_matrix()
 
 std::array<sf::Vector2i, 4> Grid::set_positions(char shape)
 {
+	std::array<sf::Vector2i, 4> positions;
+
 	switch (shape)
 	{
 	case I_SHAPE:
@@ -305,13 +339,13 @@ void Grid::move_next_pos(std::array<sf::Vector2i, 4>& coordinates, char x, char 
 
 /*--------------------------------------------------------------------------------------------------------*/
 
-bool Grid::check_rotate()
+bool Grid::check_rotate(char side)
 {
 	if (this->tetros_to_come[0] == O_SHAPE) return false;
 
 	bool can_rotate = true;
 
-	std::vector<std::vector<char>> test_matrix = rotate_matrix(this->current_tetros_matrix, 'R');
+	std::vector<std::vector<char>> test_matrix = rotate_matrix(this->current_tetros_matrix, side);
 
 	unsigned char i = 0;
 
@@ -326,15 +360,16 @@ bool Grid::check_rotate()
 
 /*--------------------------------------------------------------------------------------------------------*/
 
-void Grid::rotate()
+void Grid::rotate(char side)
 {
-	if (this->check_rotate())
+	if (this->check_rotate(side))
 	{
 		this->replace_cases(this->posToDelete, CURRENT_BLOCK, EMPTY);
 
 		char k = 0;
 
-		this->current_tetros_matrix = rotate_matrix(this->current_tetros_matrix, 'R');
+		this->current_tetros_matrix = rotate_matrix(this->current_tetros_matrix, side);
+
 		this->m_hitablePoints = this->matrix_to_pos(this->current_tetros_matrix);
 
 		this->actualize_tetr_position();

@@ -53,5 +53,5 @@ class Settings
     private:
         std::map<std::string, sf::Keyboard::Key> inputKeys; // la touche à partir du nom
         std::map<int, std::string> keysInputs;              // le nom à partir de la touche
-        std::string keys[6];
+        std::string keys[NB_KEYS];
 };

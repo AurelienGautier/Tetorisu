@@ -15,7 +15,7 @@ Settings::Settings(currentGameState &state)
     }
     else 
     {
-        std::cout << "Fichier des paramètres de l'écran inaccessible." << std::endl;
+        std::cerr << "Fichier des paramètres de l'écran inaccessible." << std::endl;
     }
 }
 
@@ -67,7 +67,7 @@ void Settings::changeControl(int control_to_change, int keyPressed, currentGameS
     std::ofstream controlsFile("savedDatas/controls.txt");
     int i=0;
 
-    while(controlsFile.is_open() && i<=5)
+    while(controlsFile.is_open() && i <= NB_KEYS)
     {
         if(i == control_to_change)
         {

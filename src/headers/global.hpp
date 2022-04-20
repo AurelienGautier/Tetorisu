@@ -16,6 +16,8 @@ constexpr short TETR_TO_COME_Y = CASE_SIZE * 5;
 constexpr short HOLDING_PLACE_X = TETR_TO_COME_X;
 constexpr short HOLDING_PLACE_Y = CASE_SIZE * 2;
 
+constexpr unsigned char NB_KEYS = 7;
+
 enum 
 {
     GAME_MENU = 0,
@@ -33,19 +35,19 @@ enum
     LEFT_ROTATION,
     RIGHT_ROTATION,
     MOVE_LEFT,
-    MOVE_RIGHT
+    MOVE_RIGHT,
+    HOLD
 };
 
 struct currentGameState {
     int state = GAME_MENU;
     int settingsControls = -1;
-    sf::Keyboard::Key controls[6];
+    sf::Keyboard::Key controls[NB_KEYS];
     int windowWidth;
     int windowHeight;
     sf::Font font;
 };
 typedef struct currentGameState currentGameState;
-
 
 void displayingText(sf::RenderWindow &window, std::string textToDisplay, sf::Font &font, int size, int positionX, int positionY);
 void manage_clic(int left_edge, int up_edge, int down_edge, int action, currentGameState &state);
@@ -60,8 +62,6 @@ void display_matrix(sf::RenderWindow& window,
                     sf::RectangleShape& cell, 
                     sf::Color color,
                     unsigned char case_to_display);
-
-
 
 // Affichage pour le gameplay
 #define CASE_SIZE 35

@@ -47,7 +47,7 @@ int main()
                 settings.display(window, state);
                 break;
             case PLAY:
-                grid.manage_events(window);
+                grid.manage_events(window, state);
                 break;
             case PAUSE:
                 pausescreen.display(window, state);
