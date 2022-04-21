@@ -33,6 +33,7 @@ void Grid::reset()
 	this->can_use_hold = false;
 	this->tetros_in_hold = EMPTY;
 	this->game_over = false;
+	this->tetro_fall_speed = 16;
 
 	for (char i = 0; i < GRID_WIDTH; i++) for (char j = 0; j < GRID_HEIGHT; j++) this->grid[i][j] = EMPTY;
 
@@ -45,11 +46,15 @@ void Grid::reset()
 
 void Grid::manage_events(sf::RenderWindow& window, currentGameState &state)
 {
+	char speed = 16;
+
 	if (this->game_over) state.state = GAME_OVER;
 
 	if (keyPressed(this->pauseKeyPressed, sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))) state.state = PAUSE;
 
 	if (!this->tetroSet) this->set_tetromino(false);
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) speed = 4;
 
 	// fall_timer for the tetromino
 	if (this->fall_timer == 0)
@@ -59,7 +64,7 @@ void Grid::manage_events(sf::RenderWindow& window, currentGameState &state)
 		if (this->check_next_pos(this->m_hitablePoints, 0, 1)) this->move_next_pos(this->m_hitablePoints, 0, 1);
 		else this->landing();
 	}
-	else this->fall_timer = (1 + this->fall_timer) % 16;
+	else this->fall_timer = (1 + this->fall_timer) % speed;
 
 	if (this->move_timer == 0)
 	{

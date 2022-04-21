@@ -11,14 +11,14 @@ void displayingText(sf::RenderWindow &window, std::string textToDisplay, sf::Fon
 
 // Permet d'éviter les appuis maintenus
 bool keyPressed(bool &keyPressed, const bool keyPressedSF)
-{   
+{
     if(keyPressed)
     {
         if(!keyPressedSF)
         {
             keyPressed = false;
         }
-    } 
+    }
     else if(keyPressedSF)
     {
         keyPressed = true;
@@ -79,10 +79,10 @@ std::vector<std::vector<char>> rotate_matrix(std::vector<std::vector<char>> matr
 
 /*--------------------------------------------------------------------------------------------------------*/
 
-void display_matrix(sf::RenderWindow& window, 
-					std::vector<std::vector<char>>& matrix, 
-					short pos_x, 
-					short pos_y, 
+void display_matrix(sf::RenderWindow& window,
+					std::vector<std::vector<char>>& matrix,
+					short pos_x,
+					short pos_y,
 					sf::RectangleShape& cell, sf::Color color,
 					unsigned char case_to_display)
 {

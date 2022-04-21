@@ -53,6 +53,7 @@ int main()
                 pausescreen.display(window, state);
                 break;
             case GAME_OVER:
+                grid.reset();
                 gameover.display(window, state);
                 break;
             case LEAVE:

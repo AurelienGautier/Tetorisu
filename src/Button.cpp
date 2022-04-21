@@ -71,3 +71,9 @@ void Button::display(sf::RenderWindow &window)
 }
 
 /*--------------------------------------------------------------------------------------------------------------*/
+
+void Button::operator=(Button button)
+{
+    this->setPos(button.get_upEdge(), button.get_leftEdge());
+    this->setText(button.get_string(), button.get_font(), button.get_charSize());
+}

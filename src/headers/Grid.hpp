@@ -43,8 +43,8 @@ private:
 	bool can_use_hold;
 	char tetros_in_hold;
 	bool game_over;
+	char tetro_fall_speed;
 
-	void reset();
 	void replace_cases(std::array<sf::Vector2i, 4>& positions, char casetype_to_replace, char replacing_case);
 	void actualize_tetr_position();
 	char get_random_tetromino();
@@ -66,6 +66,7 @@ private:
 	std::array<sf::Vector2i, 4> get_ghost_pos();
 
 public:
+	void reset();
 	Grid();
 	void manage_events(sf::RenderWindow& window, currentGameState& state);
 };
