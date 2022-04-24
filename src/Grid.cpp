@@ -30,7 +30,7 @@ void Grid::reset()
 	this->holdKeyPressed = false;
 	this->pauseKeyPressed = false;
 	this->nb_selected_tetros = 0;
-	this->can_use_hold = false;
+	this->can_use_hold = true;
 	this->tetros_in_hold = EMPTY;
 	this->game_over = false;
 	this->tetro_fall_speed = 16;
@@ -92,7 +92,9 @@ void Grid::manage_events(sf::RenderWindow& window, currentGameState &state)
 
 	if (keyPressed(this->holdKeyPressed, sf::Keyboard::isKeyPressed(state.controls[HOLD]) && can_use_hold)) this->use_hold();
 
-	this->display(window);
+	this->display_grid(window);
+	this->display_tetr_to_come(window);
+	this->display_hold(window);
 }
 
 /*--------------------------------------------------------------------------------------------------------*/
@@ -160,7 +162,7 @@ char Grid::get_random_tetromino()
 
 /*--------------------------------------------------------------------------------------------------------*/
 
-void Grid::display(sf::RenderWindow& window)
+void Grid::display_grid(sf::RenderWindow& window)
 {
 	sf::RectangleShape cell(sf::Vector2f(CASE_SIZE - 5, CASE_SIZE - 5));
 
@@ -179,10 +181,14 @@ void Grid::display(sf::RenderWindow& window)
 			window.draw(cell);
 		}
 	}
+}
 
-	cell.setSize(sf::Vector2f(NEXT - 2, NEXT - 2));
+/*--------------------------------------------------------------------------------------------------------*/
 
-	// Display the tetrominos to come
+void Grid::display_tetr_to_come(sf::RenderWindow& window)
+{
+	sf::RectangleShape cell(sf::Vector2f(NEXT - 2, NEXT - 2));
+
 	for (unsigned char k = 1; k < 7; k++) // For each tetrominos to come 
 	{
 		sf::Vector2i corner(3, 0);
@@ -190,20 +196,26 @@ void Grid::display(sf::RenderWindow& window)
 
 		// Create the matrix corresponding to the k tetromino to come
 		std::vector<std::vector<char>> matrix_tetr_to_come = pos_to_matrix(set_positions(this->tetros_to_come[k]), this->tetros_to_come[k], corner);
-
+		
 		display_matrix
 		(
-			window, 
-			matrix_tetr_to_come, 
-			TETR_TO_COME_X, 
-			TETR_TO_COME_Y + 3 * k * NEXT, 
-			cell, 
+			window,
+			matrix_tetr_to_come,
+			TETR_TO_COME_X,
+			TETR_TO_COME_Y + 3 * k * NEXT,
+			cell,
 			this->colours[this->tetros_to_come[k]],
 			CURRENT_BLOCK
 		);
 	}
+}
 
-	// Display the holding place
+/*--------------------------------------------------------------------------------------------------------*/
+
+void Grid::display_hold(sf::RenderWindow& window)
+{
+	sf::RectangleShape cell(sf::Vector2f(NEXT - 2, NEXT - 2));
+
 	if (this->tetros_in_hold != EMPTY)
 	{
 		sf::Vector2i corner(3, 0);
@@ -213,12 +225,12 @@ void Grid::display(sf::RenderWindow& window)
 
 		display_matrix
 		(
-			window, 
-			matrix_held_tetr, 
-			HOLDING_PLACE_X, 
-			HOLDING_PLACE_Y, 
-			cell, 
-			this->colours[this->tetros_in_hold], 
+			window,
+			matrix_held_tetr,
+			HOLDING_PLACE_X,
+			HOLDING_PLACE_Y,
+			cell,
+			this->colours[this->tetros_in_hold],
 			CURRENT_BLOCK
 		);
 	}

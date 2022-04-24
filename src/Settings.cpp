@@ -69,15 +69,8 @@ void Settings::changeControl(int control_to_change, int keyPressed, currentGameS
 
     while(controlsFile.is_open() && i <= NB_KEYS)
     {
-        if(i == control_to_change)
-        {
-            controlsFile << i << " " << this->keysInputs[keyPressed] << std::endl;
-        }
-
-        else
-        {
-            controlsFile << i << " " << this->keysInputs[state.controls[i]] << std::endl;
-        }
+        if(i == control_to_change) controlsFile << i << " " << this->keysInputs[keyPressed] << std::endl;
+        else controlsFile << i << " " << this->keysInputs[state.controls[i]] << std::endl;
 
         i++;
     }

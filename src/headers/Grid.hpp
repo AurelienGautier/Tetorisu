@@ -48,7 +48,9 @@ private:
 	void replace_cases(std::array<sf::Vector2i, 4>& positions, char casetype_to_replace, char replacing_case);
 	void actualize_tetr_position();
 	char get_random_tetromino();
-	void display(sf::RenderWindow& window);
+	void display_grid(sf::RenderWindow& window);
+	void display_tetr_to_come(sf::RenderWindow& window);
+	void display_hold(sf::RenderWindow& window);
 	void set_tetromino(bool for_hold);
 	void set_matrix();
 	std::array<sf::Vector2i, 4> set_positions(char shape);

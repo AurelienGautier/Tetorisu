@@ -1,6 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
+constexpr unsigned char NB_KEYS = 7;
+
 constexpr unsigned char CASE_SIZE = 35;
 constexpr unsigned char NEXT = 20;
 
@@ -15,8 +17,6 @@ constexpr short TETR_TO_COME_Y = CASE_SIZE * 5;
 
 constexpr short HOLDING_PLACE_X = TETR_TO_COME_X;
 constexpr short HOLDING_PLACE_Y = CASE_SIZE * 2;
-
-constexpr unsigned char NB_KEYS = 7;
 
 enum 
 {
@@ -36,7 +36,8 @@ enum
     RIGHT_ROTATION,
     MOVE_LEFT,
     MOVE_RIGHT,
-    HOLD
+    HOLD,
+    TRUC
 };
 
 struct currentGameState {
@@ -62,18 +63,3 @@ void display_matrix(sf::RenderWindow& window,
                     sf::RectangleShape& cell, 
                     sf::Color color,
                     unsigned char case_to_display);
-
-// Affichage pour le gameplay
-#define CASE_SIZE 35
-
-#define GRID_CASE_POSITION_X (window.getSize().x/2 - CASE_SIZE*5) + CASE_SIZE*j
-#define GRID_CASE_POSITION_Y (window.getSize().y/2 - CASE_SIZE*10) + CASE_SIZE*i
-
-#define SCORE_POSITION_X (window.getSize().x/2) + CASE_SIZE*5
-#define SCORE_POSITION_Y (window.getSize().y/2 - CASE_SIZE*10)
-
-#define TETR_TO_COME_X SCORE_POSITION_X + 32
-#define TETR_TO_COME_Y SCORE_POSITION_Y + 50
-
-constexpr int PAUSE_X = 800;
-constexpr int PAUSE_Y = 400;

@@ -1,4 +1,5 @@
 #include "headers/global.hpp"
+#include <iostream> // temporaire
 
 void displayingText(sf::RenderWindow &window, std::string textToDisplay, sf::Font &font, int size, int positionX, int positionY)
 {
@@ -88,7 +89,7 @@ void display_matrix(sf::RenderWindow& window,
 {
 	for (unsigned char i = 0; i < matrix.size(); i++)
 	{
-		for (unsigned char j = 0; j < matrix.size(); j++)
+		for (unsigned char j = 0; j < matrix[0].size(); j++)
 		{
 			if (matrix[i][j] == case_to_display)
 			{
