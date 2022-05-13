@@ -36,8 +36,7 @@ enum
     RIGHT_ROTATION,
     MOVE_LEFT,
     MOVE_RIGHT,
-    HOLD,
-    TRUC
+    HOLD
 };
 
 struct currentGameState {
@@ -47,6 +46,7 @@ struct currentGameState {
     int windowWidth;
     int windowHeight;
     sf::Font font;
+    bool isLBMpressed = false;
 };
 typedef struct currentGameState currentGameState;
 

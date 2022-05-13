@@ -1,8 +1,9 @@
 #include "headers/Button.hpp"
+#include <iostream> // temporaire
 
-Button::Button() 
+Button::Button()
 {
-
+    
 }
 
 /*--------------------------------------------------------------------------------------------------------------*/
@@ -45,16 +46,16 @@ void Button::setText(std::string string, sf::Font font, int charSize)
 }
 
 /*--------------------------------------------------------------------------------------------------------------*/
-
-bool Button::isClicked(sf::Vector2i mousePosition)
+//keyPressed(bool &keyPressed, const bool keyPressedSF)
+bool Button::isClicked(sf::Vector2i mousePosition, bool &isLMBpressed)
 {
     if(mousePosition.x >= this->leftEdge && 
        mousePosition.x <= this->rightEdge && 
        mousePosition.y >= this->upEdge && 
        mousePosition.y <= this->downEdge)
     {
-        if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
-        {
+        if (keyPressed(isLMBpressed, sf::Mouse::isButtonPressed(sf::Mouse::Left)))
+        {            
             return true;
         }
     }

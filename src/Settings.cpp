@@ -1,19 +1,19 @@
 #include "headers/Settings.hpp"
 #include <iostream>
 
-Settings::Settings(currentGameState &state)
+Settings::Settings(currentGameState& state) : concerned_setting(SETTINGS_MENU), isLMBpressed(false)
 {
     this->initKeys();
     this->initControls(state);
 
     std::ifstream resolutionFile("savedDatas/resolution.txt");
 
-    if(resolutionFile.is_open())
+    if (resolutionFile.is_open())
     {
         resolutionFile >> state.windowWidth;
         resolutionFile >> state.windowHeight;
     }
-    else 
+    else
     {
         std::cerr << "Fichier des paramètres de l'écran inaccessible." << std::endl;
     }
@@ -27,10 +27,10 @@ void Settings::initKeys()
     std::string key;
     int key_value;
 
-    if(keyFile.is_open())
+    if (keyFile.is_open())
     {
         // Assignation des touches à leurs noms et inversement
-        while(keyFile >> key >> key_value)
+        while (keyFile >> key >> key_value)
         {
             this->inputKeys[key] = (sf::Keyboard::Key)key_value;
             this->keysInputs[key_value] = key;
@@ -42,15 +42,15 @@ void Settings::initKeys()
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-void Settings::initControls(currentGameState &state)
+void Settings::initControls(currentGameState& state)
 {
     std::ifstream controlsFile("savedDatas/controls.txt");
     int action;
     std::string key;
 
-    if(controlsFile.is_open())
+    if (controlsFile.is_open())
     {
-        while(controlsFile >> action >> key)
+        while (controlsFile >> action >> key)
         {
             state.controls[action] = this->inputKeys[key];
             this->keys[action] = key;
@@ -62,14 +62,14 @@ void Settings::initControls(currentGameState &state)
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-void Settings::changeControl(int control_to_change, int keyPressed, currentGameState &state)
+void Settings::changeControl(int control_to_change, int keyPressed, currentGameState& state)
 {
     std::ofstream controlsFile("savedDatas/controls.txt");
-    int i=0;
+    int i = 0;
 
-    while(controlsFile.is_open() && i <= NB_KEYS)
+    while (controlsFile.is_open() && i <= NB_KEYS)
     {
-        if(i == control_to_change) controlsFile << i << " " << this->keysInputs[keyPressed] << std::endl;
+        if (i == control_to_change) controlsFile << i << " " << this->keysInputs[keyPressed] << std::endl;
         else controlsFile << i << " " << this->keysInputs[state.controls[i]] << std::endl;
 
         i++;
@@ -82,14 +82,53 @@ void Settings::changeControl(int control_to_change, int keyPressed, currentGameS
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-void Settings::display(sf::RenderWindow &window, currentGameState &state)
+void Settings::display(sf::RenderWindow& window, currentGameState& state)
+{
+    switch (this->concerned_setting)
+    {
+    case SETTINGS_MENU:
+        displayMenuSettings(window, state);
+        break;
+    case KEYS:
+        displayKeysSettings(window, state);
+        break;
+    case SCREEN_RESOLUTION:
+        break;
+    }
+}
+
+/*--------------------------------------------------------------------------------------------------------------*/
+
+void Settings::displayMenuSettings(sf::RenderWindow& window, currentGameState& state)
+{
+    sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
+
+    Button back(BACK_BUTTON_X, BACK_BUTTON_Y, "BACK", state.font, 50);
+
+    std::array<Button, 2> settings =
+    {
+        Button(window.getSize().x / 2, window.getSize().y / 2, "Bindings", state.font, 50),
+        Button(window.getSize().x / 2, window.getSize().y / 2 + 100, "Resolution", state.font, 50)
+    };
+
+    back.display(window);
+    for (unsigned char i = 0; i < settings.size(); i++) { settings[i].display(window); }
+
+    if (back.isClicked(mousePosition, this->isLMBpressed)) state.state = GAME_MENU;
+    else if (settings[KEYS].isClicked(mousePosition, this->isLMBpressed)) this->concerned_setting = KEYS;
+    else if (settings[SCREEN_RESOLUTION].isClicked(mousePosition, this->isLMBpressed)) this->concerned_setting = SCREEN_RESOLUTION;
+}
+
+/*--------------------------------------------------------------------------------------------------------------*/
+
+void Settings::displayKeysSettings(sf::RenderWindow& window, currentGameState& state)
 {
     sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
 
     Button back(BACK_BUTTON_X, BACK_BUTTON_Y, "BACK", state.font, 50);
 
     // Initialisation des boutons uniquement affichables
-    std::array<Button, 6> controls_names = 
+    std::array<Button, 6> controls_names =
     {
         Button(INSTANT_DESCENT_X, INSTANT_DESCENT_Y,  "INSTANT DESCENT", state.font, 50),
         Button(QUICK_DESCENT_X,   QUICK_DESCENT_Y,    "QUICK DESCENT",   state.font, 50),
@@ -123,23 +162,22 @@ void Settings::display(sf::RenderWindow &window, currentGameState &state)
 
     back.display(window);
 
-    // Affichage des boutons uniquement affichables
-    for (unsigned char i = 0; i < controls_names.size(); i++) controls_names[i].display(window);
-
-    // Affichage des touches associées
-    for (unsigned char i = 0; i < controls_names.size(); i++) associated_keys[i].display(window);
-
-    // Affichage des boutons cliquables
-    for (unsigned char i = 0; i < controls_names.size(); i++) change_the_control_key[i].display(window);
+    // Affichage des boutons
+    for (unsigned char i = 0; i < controls_names.size(); i++)
+    {
+        controls_names[i].display(window);
+        associated_keys[i].display(window);
+        change_the_control_key[i].display(window);
+    }
 
     // Clique des boutons
-    if(back.isClicked(mousePosition)) state.state = GAME_MENU;
-    else if(change_the_control_key[INSTANT_DESCENT].isClicked(mousePosition)) state.settingsControls = INSTANT_DESCENT;
-    else if(change_the_control_key[QUICK_DESCENT].isClicked(mousePosition))   state.settingsControls = QUICK_DESCENT;
-    else if(change_the_control_key[LEFT_ROTATION].isClicked(mousePosition))   state.settingsControls = LEFT_ROTATION;
-    else if(change_the_control_key[RIGHT_ROTATION].isClicked(mousePosition))  state.settingsControls = RIGHT_ROTATION;
-    else if(change_the_control_key[MOVE_LEFT].isClicked(mousePosition))       state.settingsControls = MOVE_LEFT;
-    else if(change_the_control_key[MOVE_RIGHT].isClicked(mousePosition))      state.settingsControls = MOVE_RIGHT;
+    if (back.isClicked(mousePosition, this->isLMBpressed)) this->concerned_setting = SETTINGS_MENU;
+    else if (change_the_control_key[INSTANT_DESCENT].isClicked(mousePosition, this->isLMBpressed)) state.settingsControls = INSTANT_DESCENT;
+    else if (change_the_control_key[QUICK_DESCENT].isClicked(mousePosition, this->isLMBpressed))   state.settingsControls = QUICK_DESCENT;
+    else if (change_the_control_key[LEFT_ROTATION].isClicked(mousePosition, this->isLMBpressed))   state.settingsControls = LEFT_ROTATION;
+    else if (change_the_control_key[RIGHT_ROTATION].isClicked(mousePosition, this->isLMBpressed))  state.settingsControls = RIGHT_ROTATION;
+    else if (change_the_control_key[MOVE_LEFT].isClicked(mousePosition, this->isLMBpressed))       state.settingsControls = MOVE_LEFT;
+    else if (change_the_control_key[MOVE_RIGHT].isClicked(mousePosition, this->isLMBpressed))      state.settingsControls = MOVE_RIGHT;
 }
 
 /*--------------------------------------------------------------------------------------------------------------*/

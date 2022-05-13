@@ -17,7 +17,7 @@ public:
 
     void setPos(int upEdge, int leftEdge);
     void setText(std::string string, sf::Font font, int charSize);
-    bool isClicked(sf::Vector2i mousePosition);
+    bool isClicked(sf::Vector2i mousePosition, bool& isLMBpressed);
     void display(sf::RenderWindow &window);
     void operator=(Button button);
 

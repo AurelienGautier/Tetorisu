@@ -24,11 +24,11 @@ void TitleScreen::display(sf::RenderWindow &window, currentGameState &state)
     leave.display(window);
 
     // Click sur les boutons
-    if(play.isClicked(mousePosition))
+    if(play.isClicked(mousePosition, state.isLBMpressed))
         state.state = PLAY;
-    else if(settings.isClicked(mousePosition))
+    else if(settings.isClicked(mousePosition, state.isLBMpressed))
         state.state = SETTINGS;
-    else if(leave.isClicked(mousePosition))
+    else if(leave.isClicked(mousePosition, state.isLBMpressed))
         state.state = LEAVE;
 }
 

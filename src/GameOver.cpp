@@ -24,9 +24,9 @@ void GameOver::display(sf::RenderWindow &window, currentGameState &state)
     no.display(window);
 
     // Clique des boutons
-    if(yes.isClicked(mousePosition))
+    if(yes.isClicked(mousePosition, state.isLBMpressed))
         state.state = PLAY;
-    else if(no.isClicked(mousePosition))
+    else if(no.isClicked(mousePosition, state.isLBMpressed))
         state.state = GAME_MENU;
 }
 
