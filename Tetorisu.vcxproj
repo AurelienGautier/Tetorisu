@@ -148,6 +148,7 @@
     <ClCompile Include="src\Grid.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\PauseScreen.cpp" />
+    <ClCompile Include="src\Screen.cpp" />
     <ClCompile Include="src\Settings.cpp" />
     <ClCompile Include="src\TitleScreen.cpp" />
   </ItemGroup>
@@ -157,6 +158,7 @@
     <ClInclude Include="src\headers\global.hpp" />
     <ClInclude Include="src\headers\Grid.hpp" />
     <ClInclude Include="src\headers\PauseScreen.hpp" />
+    <ClInclude Include="src\headers\Screen.hpp" />
     <ClInclude Include="src\headers\Settings.hpp" />
     <ClInclude Include="src\headers\TitleScreen.hpp" />
   </ItemGroup>

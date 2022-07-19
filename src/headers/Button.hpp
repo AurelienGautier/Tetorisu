@@ -1,6 +1,9 @@
 #pragma once
 #include "global.hpp"
 
+constexpr bool CLICKABLE = true;
+constexpr bool NOT_CLICKABLE = false;
+
 class Button
 {
     private:
@@ -9,16 +12,16 @@ class Button
         sf::Text text;
         sf::Font font;
         int charSize;
+        bool isCursorOn(sf::Vector2f mousePosition);
+        bool clickable;
     
 public:
-    Button();
-    Button(int upEdge, int leftEdge);
-    Button(int leftEdge, int upEdge, std::string string, sf::Font font, int charSize);
+    Button(int leftEdge, int upEdge, std::string string, sf::Font font, int charSize, bool clickable);
 
     void setPos(int upEdge, int leftEdge);
     void setText(std::string string, sf::Font font, int charSize);
-    bool isClicked(sf::Vector2i mousePosition, bool& isLMBpressed);
-    void display(sf::RenderWindow &window);
+    bool isClicked(sf::Vector2f mousePosition, bool& isLMBpressed);
+    void display(sf::RenderWindow &window, sf::Vector2f& mousePosition);
     void operator=(Button button);
 
     int get_upEdge() { return this->upEdge; }

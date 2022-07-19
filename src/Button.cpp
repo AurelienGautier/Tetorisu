@@ -1,24 +1,13 @@
 #include "headers/Button.hpp"
 #include <iostream> // temporaire
 
-Button::Button()
-{
-    
-}
-
 /*--------------------------------------------------------------------------------------------------------------*/
 
-Button::Button(int upEdge, int leftEdge)
-{
-    this->setPos(upEdge, leftEdge);
-}
-
-/*--------------------------------------------------------------------------------------------------------------*/
-
-Button::Button(int leftEdge, int upEdge, std::string string, sf::Font font, int charSize)
+Button::Button(int leftEdge, int upEdge, std::string string, sf::Font font, int charSize, bool clickable)
 {
     this->setPos(upEdge, leftEdge);
     this->setText(string, font, charSize);
+    this->clickable = clickable;
 }
 
 /*--------------------------------------------------------------------------------------------------------------*/
@@ -46,18 +35,15 @@ void Button::setText(std::string string, sf::Font font, int charSize)
 }
 
 /*--------------------------------------------------------------------------------------------------------------*/
-//keyPressed(bool &keyPressed, const bool keyPressedSF)
-bool Button::isClicked(sf::Vector2i mousePosition, bool &isLMBpressed)
+
+bool Button::isCursorOn(sf::Vector2f mousePosition)
 {
-    if(mousePosition.x >= this->leftEdge && 
-       mousePosition.x <= this->rightEdge && 
-       mousePosition.y >= this->upEdge && 
-       mousePosition.y <= this->downEdge)
+    if (mousePosition.x >= this->leftEdge &&
+        mousePosition.x <= this->rightEdge &&
+        mousePosition.y >= this->upEdge &&
+        mousePosition.y <= this->downEdge)
     {
-        if (keyPressed(isLMBpressed, sf::Mouse::isButtonPressed(sf::Mouse::Left)))
-        {            
-            return true;
-        }
+        return true;
     }
 
     return false;
@@ -65,8 +51,33 @@ bool Button::isClicked(sf::Vector2i mousePosition, bool &isLMBpressed)
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-void Button::display(sf::RenderWindow &window)
+//keyPressed(bool &keyPressed, const bool keyPressedSF)
+bool Button::isClicked(sf::Vector2f mousePosition, bool &isLMBpressed)
 {
+    if(isCursorOn(mousePosition) && keyPressed(isLMBpressed, sf::Mouse::isButtonPressed(sf::Mouse::Left)))
+    {
+        return true;
+    }
+
+    return false;
+}
+
+/*--------------------------------------------------------------------------------------------------------------*/
+
+void Button::display(sf::RenderWindow &window, sf::Vector2f &mousePosition)
+{
+    this->text.setFillColor(sf::Color::White);
+
+    if (this->isCursorOn(mousePosition) && this->clickable)
+    {
+        sf::RectangleShape rectangle(sf::Vector2f(this->rightEdge - this->leftEdge, this->downEdge - this->upEdge));
+        rectangle.setPosition(this->leftEdge, this->upEdge);
+
+        this->text.setFillColor(sf::Color::Black);
+
+        window.draw(rectangle);
+    }
+
     this->text.setPosition(this->leftEdge, this->upEdge);
     window.draw(this->text);
 }
@@ -78,3 +89,5 @@ void Button::operator=(Button button)
     this->setPos(button.get_upEdge(), button.get_leftEdge());
     this->setText(button.get_string(), button.get_font(), button.get_charSize());
 }
+
+/*--------------------------------------------------------------------------------------------------------------*/

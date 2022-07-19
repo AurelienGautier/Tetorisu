@@ -26,16 +26,20 @@ int main()
     GameOver gameover;
 
     // Création de la fenêtre et de la vue
-    sf::RenderWindow window(sf::VideoMode(state.windowWidth, state.windowHeight), "Tetorisu", sf::Style::Titlebar | sf::Style::Close);
-    sf::View view(sf::Vector2f(window.getSize().x/2, window.getSize().y/2), sf::Vector2f(state.windowWidth, state.windowHeight));
+    sf::RenderWindow window(
+        sf::VideoMode(state.windowWidth, state.windowHeight), 
+        "Tetorisu"/*, sf::Style::Titlebar | sf::Style::Close*/
+    );
+    sf::View view(
+        sf::Vector2f(window.getSize().x/2, window.getSize().y/2), 
+        sf::Vector2f(state.windowWidth, state.windowHeight)
+    );
     window.setFramerateLimit(60);
 
     while (window.isOpen())
     {
         // Vide la fenêtre et affiche l'arrrière-plan
         window.clear();
-        /*background.setPosition(0,0);
-        window.draw(background);*/
 
         // Gestion des différents écrans
         switch(state.state)
@@ -44,7 +48,7 @@ int main()
                 titlescreen.display(window, state);
                 break;
             case SETTINGS:
-                settings.display(window, state);
+                settings.display(window, view, state);
                 break;
             case PLAY:
                 grid.manage_events(window, state);

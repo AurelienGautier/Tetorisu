@@ -1,9 +1,10 @@
 #pragma once
+
 #include <SFML/Graphics.hpp>
 
 constexpr unsigned char NB_KEYS = 7;
 
-constexpr unsigned char CASE_SIZE = 35;
+constexpr unsigned char CASE_SIZE = 40;
 constexpr unsigned char NEXT = 20;
 
 constexpr unsigned char GRID_WIDTH = 20;
@@ -60,6 +61,31 @@ void display_matrix(sf::RenderWindow& window,
                     std::vector<std::vector<char>>& matrix, 
                     short pos_x, 
                     short pos_y, 
-                    sf::RectangleShape& cell, 
-                    sf::Color color,
+                    sf::Sprite& cell, 
+                    sf::Texture color,
                     unsigned char case_to_display);
+
+template <typename C, typename T>
+bool isPresentIn(const C& container, const T value)
+{
+    for (unsigned char i = 0; i < container.size(); i++)
+    {
+        if (container[i] == value)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+template <typename C, typename T>
+C setAllCAsesAt(C container, T value)
+{
+    for (unsigned char i = 0; i < container.size(); i++)
+    {
+        container[i] = value;
+    }
+
+    return container;
+}

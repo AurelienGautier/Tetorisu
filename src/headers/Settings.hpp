@@ -62,21 +62,21 @@ constexpr int CHANGE_MOVE_RIGHT_Y = MOVE_RIGHT_Y;
 
 class Settings
 {
+private:
+    void displayMenuSettings(sf::RenderWindow& window, currentGameState& state);
+    void displayKeysSettings(sf::RenderWindow& window, currentGameState& state);
+    void displayResolutionSettings(sf::RenderWindow& window, currentGameState& state);
+    std::map<std::string, sf::Keyboard::Key> inputKeys; // la touche à partir du nom
+    std::map<int, std::string> keysInputs;              // le nom à partir de la touche
+    std::string keys[NB_KEYS];
+    char concerned_setting;
+
 public:
     Settings(currentGameState& state);
     void initKeys();
     void initControls(currentGameState& state);
     void changeControl(int control_to_change, int keyPressed, currentGameState& state);
-    void display(sf::RenderWindow& window, currentGameState& state);
+    void display(sf::RenderWindow& window, sf::View& view, currentGameState& state);
     void settings_manage_clic(sf::Vector2i mousePosition, int left_edge, int up_edge, int down_edge, int action, currentGameState& state);
     void resizeWindow(sf::RenderWindow& window, sf::View view);
-
-private:
-    void displayMenuSettings(sf::RenderWindow& window, currentGameState& state);
-    void displayKeysSettings(sf::RenderWindow& window, currentGameState& state);
-    std::map<std::string, sf::Keyboard::Key> inputKeys; // la touche à partir du nom
-    std::map<int, std::string> keysInputs;              // le nom à partir de la touche
-    std::string keys[NB_KEYS];
-    char concerned_setting;
-    bool isLMBpressed;
 };

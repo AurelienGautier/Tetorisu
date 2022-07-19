@@ -84,7 +84,7 @@ void display_matrix(sf::RenderWindow& window,
 					std::vector<std::vector<char>>& matrix,
 					short pos_x,
 					short pos_y,
-					sf::RectangleShape& cell, sf::Color color,
+					sf::Sprite& cell, sf::Texture color,
 					unsigned char case_to_display)
 {
 	for (unsigned char i = 0; i < matrix.size(); i++)
@@ -94,12 +94,11 @@ void display_matrix(sf::RenderWindow& window,
 			if (matrix[i][j] == case_to_display)
 			{
 				cell.setPosition(pos_x + NEXT * j, pos_y + NEXT * i);
-				cell.setFillColor(color);
+				cell.setTexture(color);
 
 				window.draw(cell);
 			}
 		}
 	}
 }
-
 /*--------------------------------------------------------------------------------------------------------*/
